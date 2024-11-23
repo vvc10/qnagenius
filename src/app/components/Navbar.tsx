@@ -7,7 +7,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/app/components/ui/sheet"
-import { ChevronDown, Menu, Moon, Search, Sun } from 'lucide-react'
+import {  Menu, Moon, Sun } from 'lucide-react'
 import Link from 'next/link'
 
 const Navbar = ({ isDark, toggleDarkMode }) => {

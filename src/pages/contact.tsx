@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/app/components/ui/button'; // Assuming Button from ShadCN UI
 import { Input } from '@/app/components/ui/input'; // Assuming Input from ShadCN UI
 import { Textarea } from '@/app/components/ui/textarea'; // Assuming Textarea from ShadCN UI
-import { cn } from '@/app/lib/utils'; // If needed for combining classes
-import { useEffect } from 'react';
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 
@@ -17,7 +15,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-  const [isDark, setIsDark] = React.useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     // Check if dark mode preference exists in localStorage
@@ -36,6 +34,7 @@ const Contact = () => {
     // Toggle dark class on the html element
     document.documentElement.classList.toggle('dark', newDarkMode);
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -54,7 +53,7 @@ const Contact = () => {
 
       setSubmitSuccess(true);
       setFormData({ name: '', email: '', message: '' }); // Clear form
-    } catch (error) {
+    } catch (err) {
       setSubmitError(true);
     } finally {
       setIsSubmitting(false);
@@ -62,7 +61,6 @@ const Contact = () => {
   };
 
   return (
-
     <div className={`min-h-screen bg-gradient-to-b from-background to-secondary/10 ${isDark ? 'dark' : ''}`}>
       <Navbar isDark={isDark} toggleDarkMode={toggleDarkMode} />
       <section className="w-full py-12 md:py-24 lg:py-32">
@@ -70,7 +68,7 @@ const Contact = () => {
           <div className="text-center mb-8">
             <h2 className="font-bold text-3xl sm:text-4xl md:text-5xl">Contact Us</h2>
             <p className="max-w-[85%] text-muted-foreground sm:text-lg sm:leading-7">
-              Have a question or feedback? We'd love to hear from you! Fill out the form below, and we'll get back to you as soon as possible.
+              Have a question or feedback? We&apos;d love to hear from you! Fill out the form below, and we&apos;ll get back to you as soon as possible.
             </p>
           </div>
           <div className="mx-auto max-w-3xl">
@@ -125,7 +123,7 @@ const Contact = () => {
                   variant="secondary"
                   type="submit"
                   disabled={isSubmitting}
-                  className=" py-3 px-8 rounded-md"
+                  className="py-3 px-8 rounded-md"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
@@ -143,7 +141,6 @@ const Contact = () => {
       </section>
       <Footer />
     </div>
-
   );
 };
 

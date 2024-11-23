@@ -2,6 +2,7 @@
 import '../app/styles/globals.css';
 import { ThemeProvider } from '@/app/components/ThemeProvider';
 import Head from 'next/head';
+import { AppProps } from 'next/app';  // Importing AppProps for proper typing
 
 const theme = {
   colors: {
@@ -9,7 +10,7 @@ const theme = {
   },
 };
 
-function MyApp({ Component, pageProps }: any) {
+function MyApp({ Component, pageProps }: AppProps) {  // Use AppProps for typing
   return (
     <>
       <Head>

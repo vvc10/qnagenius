@@ -4,10 +4,9 @@ import React, { useState, useEffect } from "react"
 import { useSearchParams } from 'next/navigation'
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowLeft, BookOpen, Clock, Users, Star, Share, Share2, ChevronRight, MessageCircle } from 'lucide-react'
+import {  Clock, Users, Share, ChevronRight } from 'lucide-react'
 import { Button } from "@/app/components/ui/button"
-import { Progress } from "@/app/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
+ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar"
 import { Badge } from "@/app/components/ui/badge"

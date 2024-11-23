@@ -5,7 +5,7 @@ import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
 import { Loader2, Trash2 } from 'lucide-react'
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -33,6 +33,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/ta
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/components/ui/card"
 import { Label } from "@/app/components/ui/label"
 import { RichTextEditor } from "@/app/components/RichTextEditor"
+import Image from "next/image"
 
 interface Project {
   id: string
@@ -427,7 +428,10 @@ const AdminHome: React.FC = () => {
                   <CardDescription>{project.category}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <img src={project.image} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
+                  <Image
+                   width={200}
+                   height={300}
+                   src={project.image} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
                   <p className="text-sm text-gray-600 mb-2">Duration: {project.duration}</p>
                   {/* <p className="text-sm text-gray-600 mb-2">Enrolled: </p> */}
                   <p className="text-sm text-gray-600 mb-2">Instructor: {project.instructor}</p>

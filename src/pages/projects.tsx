@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from 'next/navigation'
-import { Search, Star, BookOpen, ChevronRight, Eye, Clock } from 'lucide-react'
+import { Search, ChevronRight, Eye, Clock } from 'lucide-react'
 import { Button } from "@/app/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/app/components/ui/card"
 import { Input } from "@/app/components/ui/input"

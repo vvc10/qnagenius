@@ -1,37 +1,16 @@
 import * as React from "react"
-import { ChevronDown, Menu, Moon, Search, Sun } from 'lucide-react'
-import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/app/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/app/components/ui/card"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/app/components/ui/collapsible"
-import { Input } from "@/app/components/ui/input"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/app/components/ui/sheet"
+ 
 import { cn } from "@/app/lib/utils"
 import Faqs from "@/app/components/Faqs"
 import Footer from "@/app/components/Footer"
 import Navbar from "@/app/components/Navbar"
-import { useEffect, useState } from "react"
 
-interface Project {
-  title: string;
-  category: string;
-  enrolled: string;
-}
-
+ 
 const Home: React.FC = () => {
   const [isDark, setIsDark] = React.useState('dark')
-  const [searchTerm, setSearchTerm] = React.useState("")
+  // const [searchTerm, setSearchTerm] = React.useState("")
 
   const projects = [
     {
