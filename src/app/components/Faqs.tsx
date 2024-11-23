@@ -2,27 +2,42 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 const Faqs = () => {
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = [
     {
-      question: "Are the courses really free?",
+      question: "Are the projects listed on this platform free to access?",
       answer:
-        "Yes, all courses listed in our free section are completely free of charge. You can access all the content and materials without any payment.",
+        "Yes, all the projects available on our platform are free to browse. You can explore the project details and use the resources without any cost.",
     },
     {
-      question: "Will I get a certificate?",
+      question: "Can I submit my own final-year project?",
       answer:
-        "Upon completion of the course, you will receive a digital certificate that you can share on your professional networks.",
+        "Absolutely! We encourage students to upload their final-year projects and share them with the community. Simply go to contact, submit your project, and provide necessary details like documentation and code.",
     },
     {
-      question: "How long do I have access to the courses?",
+      question: "Will I receive feedback on my project submissions?",
       answer:
-        "Once enrolled, you have lifetime access to the course content. Learn at your own pace and revisit the materials whenever you need.",
+        "Yes, upon submitting your project, other community members and experts can provide feedback. This way, you can enhance your projects with valuable suggestions.",
+    },
+    {
+      question: "Can I collaborate on projects with others?",
+      answer:
+        "Yes, our platform supports collaboration! You can connect with other students and professionals to work together on final-year projects or explore collaborative project ideas.",
+    },
+    {
+      question: "How can I search for projects on the platform?",
+      answer:
+        "You can use the search bar at the top of the page to find specific projects by title, category, or technology stack. You can also filter projects based on different criteria such as category and submission date.",
+    },
+    {
+      question: "How do I get started with uploading my project?",
+      answer:
+        "Getting started is easy! After creating an account, you can upload your project by providing a title, description, related documents, and a link to the project repository (if available).",
     },
   ];
 
-  const handleToggle = (index) => {
+  const handleToggle = (index: number) => {
     setOpenIndex(index === openIndex ? null : index);
   };
 
@@ -34,7 +49,7 @@ const Faqs = () => {
             Frequently Asked Questions
           </h2>
           <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            Find answers to common questions about our platform and courses.
+            Here are answers to some of the most common questions about our project platform.
           </p>
         </div>
         <div className="mx-auto grid max-w-3xl gap-4 pt-8 md:pt-12">

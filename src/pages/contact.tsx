@@ -1,179 +1,150 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { Button } from '@/app/components/ui/button'; // Assuming Button from ShadCN UI
+import { Input } from '@/app/components/ui/input'; // Assuming Input from ShadCN UI
+import { Textarea } from '@/app/components/ui/textarea'; // Assuming Textarea from ShadCN UI
+import { cn } from '@/app/lib/utils'; // If needed for combining classes
+import { useEffect } from 'react';
+import Navbar from '@/app/components/Navbar';
+import Footer from '@/app/components/Footer';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
+  const [isDark, setIsDark] = React.useState(false);
+
+  useEffect(() => {
+    // Check if dark mode preference exists in localStorage
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDark(isDarkMode);
+
+    // Apply dark class to the html element
+    document.documentElement.classList.toggle('dark', isDarkMode);
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDark;
+    setIsDark(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString());
+
+    // Toggle dark class on the html element
+    document.documentElement.classList.toggle('dark', newDarkMode);
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Simulate form submission (e.g., using fetch or axios for real-world applications)
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulating network delay
+
+      setSubmitSuccess(true);
+      setFormData({ name: '', email: '', message: '' }); // Clear form
+    } catch (error) {
+      setSubmitError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div>
-           {/* Content */}
-           <div className="px-2 py-6 w-full mx-auto">
 
-<main className="container py-6">
-  <div className="flex flex-col gap-6">
-
-    <div className="flex flex-col gap-4">
-      <h1 className="text-4xl font-bold">{title}</h1>
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-            <User className="h-5 w-5" />
+    <div className={`min-h-screen bg-gradient-to-b from-background to-secondary/10 ${isDark ? 'dark' : ''}`}>
+      <Navbar isDark={isDark} toggleDarkMode={toggleDarkMode} />
+      <section className="w-full py-12 md:py-24 lg:py-32">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="font-bold text-3xl sm:text-4xl md:text-5xl">Contact Us</h2>
+            <p className="max-w-[85%] text-muted-foreground sm:text-lg sm:leading-7">
+              Have a question or feedback? We'd love to hear from you! Fill out the form below, and we'll get back to you as soon as possible.
+            </p>
           </div>
-          <div>
-            <h2 className="font-semibold">written by {author}</h2>
-            <p className="text-sm text-gray-500">Last updated - {lastUpdated}</p>
-          </div>
-        </div>
-      </div>
-
-
-      <div className="flex space-x-4 mb-5">
-        <Button variant="outline" size="sm"><Star className="mr-2 h-4 w-4" /> 42</Button>
-        <Button variant="outline" size="sm"><Heart className="mr-2 h-4 w-4" /> 156</Button>
-        <Button variant="outline" size="sm"><BookOpen className="mr-2 h-4 w-4" /> 10k</Button>
-        <Button variant="outline" size="sm"><MessageSquare className="mr-2 h-4 w-4" /> 23</Button>
-        <Button variant="outline" size="sm"><Share2 className="mr-2 h-4 w-4" /> Share</Button>
-      </div>
-
-      <Card>
-        <CardContent className="p-4">
-
-          <ScrollArea className="relative w-full overflow-x-auto scrollbar-hide">
-            <div className="flex space-x-4 p-1">
-              <Image
-                src={image} // Fixed path handling
-                alt="Gallery image"
-                width={600}
-                height={400}
-                className="w-full rounded-[10px] h-auto object-cover"
-              />
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        </CardContent>
-      </Card>
-
-      {/* Project Description */}
-      <p className="mb-8 mt-2" id="intro">
-        {description}
-      </p>
-    </div>
-
-    {/* Project Steps */}
-    <div className="grid gap-6">
-      {projects.map((project) => (
-        <div key={project.id}>
-          {/* Components */}
-          <Card id="components">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  1
-                </span>
-                Components needed
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {project.components}
-            </CardContent>
-          </Card>
-
-          {/* Circuit */}
-          <Card id="circuit">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  2
-                </span>
-                Circuit Assembly
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                <Image
-                  src={project.circuit ? `/images/${project.circuit}` : "/placeholder.svg"} // Fixed path handling
-                  alt="Circuit diagram"
-                  width={800}
-                  height={400}
-                  className="rounded-lg border mx-auto"
+          <div className="mx-auto max-w-3xl">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium">
+                  Full Name
+                </label>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <p className="text-muted-foreground">
-                  {project.about_circuit}
-                </p>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* Programming */}
-          <Card id="programming">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  3
-                </span>
-                Programming
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="code" className="w-full">
-                <TabsList>
-                  <TabsTrigger value="code">Code</TabsTrigger>
-                  <TabsTrigger value="explanation">Explanation</TabsTrigger>
-                </TabsList>
-                <TabsContent value="code">
-                  <pre className="rounded-lg bg-muted p-4 overflow-x-auto">
-                    <code>{project.programming}</code>
-                  </pre>
-                </TabsContent>
-                <TabsContent value="explanation">
-                  <p className="text-muted-foreground">
-                    {project.about_programming}
-                  </p>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-
-          {/* Final Assembly */}
-          <Card id="conclusion">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  4
-                </span>
-                Conclusion
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <Image
-                    src={project.conclusion_images ? `/images/${project.conclusion_images}` : "/placeholder.svg"} // Fixed path handling
-                    alt="Assembly step 1"
-                    width={400}
-                    height={300}
-                    className="rounded-lg border"
-                  />
-                  <Image
-                    src="/placeholder.svg"
-                    alt="Assembly step 2"
-                    width={400}
-                    height={300}
-                    className="rounded-lg border"
-                  />
-                </div>
-                <ol className="list-decimal pl-6 space-y-2">
-                  {project.conclusion}
-                </ol>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium">
+                  Email Address
+                </label>
+                <Input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
-            </CardContent>
-          </Card>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium">
+                  Message
+                </label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                  className="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="flex justify-center">
+                <Button
+                  variant="secondary"
+                  type="submit"
+                  disabled={isSubmitting}
+                  className=" py-3 px-8 rounded-md"
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </Button>
+              </div>
+
+              {submitSuccess && (
+                <div className="text-green-600 text-center mt-4">Your message has been sent successfully!</div>
+              )}
+              {submitError && (
+                <div className="text-red-600 text-center mt-4">Oops! Something went wrong. Please try again later.</div>
+              )}
+            </form>
+          </div>
         </div>
-      ))}
+      </section>
+      <Footer />
     </div>
-  </div>
-</main>
-</div>
 
-    </div>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

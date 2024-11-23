@@ -10,11 +10,11 @@ import {
 import { ChevronDown, Menu, Moon, Search, Sun } from 'lucide-react'
 import Link from 'next/link'
 
-const Navbar = ({ isDark ,toggleDarkMode }) => {
-   
+const Navbar = ({ isDark, toggleDarkMode }) => {
+
 
     return (
-        <header className="sticky top-0 z-50 w-full px-6 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-50 w-full px-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-16 items-center w-full">
                 <Sheet>
                     <SheetTrigger asChild>
@@ -25,10 +25,10 @@ const Navbar = ({ isDark ,toggleDarkMode }) => {
                     </SheetTrigger>
                     <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                         <SheetHeader>
-                            <SheetTitle>Navigation</SheetTitle>
+                            <SheetTitle>Qnagenius</SheetTitle>
                         </SheetHeader>
                         <nav className="grid gap-4 py-4">
-                            {["Projects", "About", "Contact", "Blog"].map((item) => (
+                            {["Projects", "About", "Contact"].map((item) => (
                                 <Link
                                     key={item}
                                     href={`/${item.toLowerCase()}`}
@@ -44,7 +44,7 @@ const Navbar = ({ isDark ,toggleDarkMode }) => {
                     <span className="font-bold text-xl">QnaGenius</span>
                 </Link>
                 <nav className="flex items-center space-x-6 text-sm font-medium hidden lg:flex">
-                    {["Projects", "Blog", "About", "Contact" ].map((item) => (
+                    {["Projects", "About", "Contact"].map((item) => (
                         <Link
                             key={item}
                             href={`/${item.toLowerCase()}`}
@@ -65,7 +65,7 @@ const Navbar = ({ isDark ,toggleDarkMode }) => {
                         <span className="sr-only">Toggle theme</span>
                     </Button>
                     <div className="w-full flex-1 md:w-auto md:flex-none">
-                        <Button className="hidden lg:flex">Get Started</Button>
+                        <Button className="hidden lg:flex">Get Help</Button>
                     </div>
                 </div>
             </div>

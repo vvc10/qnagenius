@@ -1,6 +1,6 @@
 // src/pages/_app.tsx
 import '../app/styles/globals.css';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from '@/app/components/ThemeProvider';
 import Head from 'next/head';
 
 const theme = {
