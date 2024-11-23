@@ -1,0 +1,328 @@
+'use client'
+
+import React, { useState, useEffect } from "react"
+import { useSearchParams } from 'next/navigation'
+import Link from "next/link"
+import { motion } from "framer-motion"
+import { ArrowLeft, BookOpen, Clock, Users, Star, Share, Share2, ChevronRight, MessageCircle } from 'lucide-react'
+import { Button } from "@/app/components/ui/button"
+import { Progress } from "@/app/components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar"
+import { Badge } from "@/app/components/ui/badge"
+import { Separator } from "@/app/components/ui/separator"
+import { ScrollArea } from "@/app/components/ui/scroll-area"
+import Image from "next/image"
+import Navbar from "@/app/components/Navbar"
+import Footer from "@/app/components/Footer"
+import { db } from "@/app/db/firebase.config"
+import { doc, getDoc, collection, getDocs } from "firebase/firestore"
+
+interface Project {
+  id: string
+  title: string
+  category: string
+  enrolled: string
+  image?: string
+  author: string
+  description: string
+  duration: string
+  lastUpdated: string
+  progress: number
+  overview: string
+  syllabus: string[]
+  requirements: string[]
+  blogContent: {
+    components: string
+    circuit: string
+    about_circuit: string
+    about_programming: string
+    conclusion: string
+    conclusion_images: string
+    programming: string
+  }
+}
+
+const sidebarItems = [
+  { id: "overview", label: "Overview" },
+  { id: "components", label: "Components" },
+  { id: "circuit", label: "Circuit" },
+  { id: "programming", label: "Programming" },
+  { id: "conclusion", label: "Conclusion" },
+]
+
+export default function ProjectDetails() {
+  const [isDark, setIsDark] = useState(false)
+  const [project, setProject] = useState<Project | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [activeSection, setActiveSection] = useState("overview")
+  const searchParams = useSearchParams()
+  const projectId = searchParams.get('id')
+
+  useEffect(() => {
+    const isDarkMode = localStorage.getItem("darkMode") === "true"
+    setIsDark(isDarkMode)
+    document.documentElement.classList.toggle("dark", isDarkMode)
+  }, [])
+
+  useEffect(() => {
+    const fetchProjectDetails = async () => {
+      if (!projectId) return
+
+      try {
+        const projectDoc = await getDoc(doc(db, "projects", projectId))
+        if (projectDoc.exists()) {
+          const projectData = projectDoc.data() as Project
+          projectData.id = projectDoc.id
+
+          const blogContentSnapshot = await getDocs(collection(db, "projects", projectId, "blog_content"))
+          const blogContent = blogContentSnapshot.docs[0]?.data() || {}
+
+          setProject({
+            ...projectData,
+            blogContent: {
+              components: blogContent.components || "",
+              circuit: blogContent.circuit || "",
+              about_circuit: blogContent.about_circuit || "",
+              about_programming: blogContent.about_programming || "",
+              conclusion: blogContent.conclusion || "",
+              conclusion_images: blogContent.conclusion_images || "",
+              programming: blogContent.programming || "",
+            },
+            // Ensure requirements is always an array
+            requirements: Array.isArray(projectData.requirements) ? projectData.requirements : [],
+            // Ensure syllabus is always an array
+            syllabus: Array.isArray(projectData.syllabus) ? projectData.syllabus : [],
+          })
+        } else {
+          console.error("Project not found")
+        }
+      } catch (error) {
+        console.error("Error fetching project details:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProjectDetails()
+  }, [projectId])
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDark
+    setIsDark(newDarkMode)
+    localStorage.setItem("darkMode", newDarkMode.toString())
+    document.documentElement.classList.toggle("dark", newDarkMode)
+  }
+
+  if (loading || !project) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4">Loading project details...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={`min-h-screen ${isDark ? 'dark' : ''}`}>
+      <Navbar isDark={isDark} toggleDarkMode={toggleDarkMode} />
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar */}
+          <aside className="lg:w-1/4">
+            <Card className="sticky top-20">
+              <CardHeader>
+                <CardTitle>Table of Contents</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <nav className="space-y-1">
+                  {sidebarItems.map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`#${item.id}`}
+                      className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${activeSection === item.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                        }`}
+                      onClick={() => setActiveSection(item.id)}
+                    >
+                      {item.label}
+                      {activeSection === item.id && (
+                        <ChevronRight className="ml-auto h-4 w-4" />
+                      )}
+                    </Link>
+                  ))}
+                </nav>
+              </CardContent>
+            </Card>
+          </aside>
+
+          {/* Main content */}
+          <div className="lg:w-3/4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+
+              <h1 className="text-4xl font-bold mb-4">{project.title}</h1>
+              <div className="flex flex-row justify-between">
+                <div className="">
+                  <div className="flex items-center mb-4">
+                    <Avatar className="h-10 w-10 mr-2">
+                      <AvatarImage src="/placeholder-avatar.jpg" alt={project.author || 'Unknown Author'} />
+                      <AvatarFallback>{(project.author || 'U')[0].toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-semibold">{project.author || 'Unknown Author'}</p>
+                      <p className="text-sm text-muted-foreground">author</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-4 mb-6">
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      {project.duration} min read
+                    </Badge>
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      {project.enrolled}
+                    </Badge>
+                    {/* <Badge variant="secondary" className="flex items-center gap-1">
+                  <MessageCircle className="h-4 w-4" />
+                  {project.comments}1
+                </Badge> */}
+                    <Badge variant="secondary">Last updated {project.lastUpdated}</Badge>
+                  </div>
+                </div>
+                <div className="mx-2">
+                <Button variant="secondary">
+                  <Share/></Button>
+                </div>
+                 
+              </div>
+
+
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <Card className="mb-8 overflow-hidden">
+                <Image
+                  src={project.image || "/default-project-cover.jpg"}
+                  alt={project.title}
+                  width={1200}
+                  height={600}
+                  className="w-full h-64 object-cover transform transition-transform duration-300 ease-in-out hover:scale-105"
+                />
+
+
+              </Card>
+            </motion.div>
+
+            <Tabs defaultValue="content" className="mb-8">
+              <TabsList>
+                <TabsTrigger value="content">Project</TabsTrigger>
+                <TabsTrigger value="overview">Faqs</TabsTrigger>
+              </TabsList>
+              <TabsContent value="content">
+                <ScrollArea className="h-full w-full rounded-md border p-4">
+                  <section id="overview" className="mb-8">
+                    {/* <h2 className="text-3xl font-bold mb-4"> Overview</h2> */}
+                    <div dangerouslySetInnerHTML={{ __html: project.description }} />
+                  </section>
+
+                  <Separator className="my-8" />
+
+                  <section id="components" className="mb-8">
+                    <h2 className="text-3xl font-bold mb-4">Components</h2>
+                    <div dangerouslySetInnerHTML={{ __html: project.blogContent.components }} />
+                  </section>
+
+                  <Separator className="my-8" />
+
+                  <section id="circuit" className="mb-8">
+                    <h2 className="text-3xl font-bold mb-4">Circuit</h2>
+                    <div dangerouslySetInnerHTML={{ __html: project.blogContent.circuit }} />
+                    <div dangerouslySetInnerHTML={{ __html: project.blogContent.about_circuit }} />
+                  </section>
+
+                  <Separator className="my-8" />
+
+                  <section id="programming" className="mb-8">
+                    <h2 className="text-3xl font-bold mb-4">Programming</h2>
+
+                    
+                    <Tabs defaultValue="code" className="mb-4">
+                      <TabsList>
+                        {/* Tab triggers */}
+                        <TabsTrigger value="code">Code</TabsTrigger>
+                        <TabsTrigger value="explanation">Explaination</TabsTrigger>
+                      </TabsList>
+
+                      {/* Tab content for Code */}
+                      <TabsContent value="code">
+  <div className={`${isDark?"bg-[#1e293b]":"bg-gray-200"} px-2 py-2 rounded-[5px]`}>
+    <pre
+      className="whitespace-pre-wrap overflow-x-auto max-w-full"
+      dangerouslySetInnerHTML={{
+        __html: `<code>${project.blogContent.programming}</code>`,
+      }}
+    />
+  </div>
+</TabsContent>
+
+
+                      {/* Tab content for Explanation */}
+                      <TabsContent value="explanation">
+                        <div
+                          dangerouslySetInnerHTML={{ __html: project.blogContent.about_programming }}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </section>
+
+                  <Separator className="my-8" />
+
+                  <section id="conclusion" className="mb-8">
+                    <h2 className="text-3xl font-bold mb-4">Conclusion</h2>
+                    <div dangerouslySetInnerHTML={{ __html: project.blogContent.conclusion }} />
+                  </section>
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="overview">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Faqs</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    No faqs
+                    {/* <h3 className="text-xl font-semibold mb-2">Requirements</h3>
+                    <ul className="list-disc pl-5 mb-4">
+                      {project.requirements.map((req, index) => (
+                        <li key={index} dangerouslySetInnerHTML={{ __html: req }} />
+                      ))}
+                    </ul>
+                    <h3 className="text-xl font-semibold mb-2">Syllabus</h3>
+                    <ol className="list-decimal pl-5">
+                      {project.syllabus.map((item, index) => (
+                        <li key={index} className="mb-2" dangerouslySetInnerHTML={{ __html: item }} />
+                      ))}
+                    </ol> */}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
