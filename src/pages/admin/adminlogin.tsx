@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 
-const AdminLogin = ({ onLogin }) => {
+interface AdminLoginProps {
+  onLogin: () => void; // Define the type of the onLogin prop
+}
+
+const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const response = await fetch('/api/admin/login', {
