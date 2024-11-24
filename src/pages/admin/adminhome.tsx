@@ -227,7 +227,6 @@ const AdminHome: React.FC = () => {
       setLoading(false)
     }
   }
-
   const handleSaveEdit = async () => {
     if (!editingProject) return;
   
@@ -249,11 +248,13 @@ const AdminHome: React.FC = () => {
       const blogContentSnapshot = await getDocs(blogContentRef);
       const blogContentDocRef = blogContentSnapshot.docs[0]?.ref;
   
+      // Using the FirestoreBlogContent type instead of any
+      const blogContentToUpdate: FirestoreBlogContent = editingProject.blogContent;
+  
       if (blogContentDocRef) {
-        // Cast blogContent to a more flexible type
-        await updateDoc(blogContentDocRef, editingProject.blogContent as { [key: string]: any });
+        await updateDoc(blogContentDocRef, blogContentToUpdate);
       } else {
-        await addDoc(blogContentRef, editingProject.blogContent as { [key: string]: any });
+        await addDoc(blogContentRef, blogContentToUpdate);
       }
   
       setProjects((prev) =>
@@ -271,7 +272,6 @@ const AdminHome: React.FC = () => {
     }
   };
   
-
   const handleDeleteProject = async (projectId: string) => {
     setLoading(true)
     try {
