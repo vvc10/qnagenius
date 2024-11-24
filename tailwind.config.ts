@@ -9,7 +9,7 @@ export default {
   darkMode: ["class"],  // Enable dark mode by class (you can toggle the 'dark' class)
   theme: {
   	container: {
-  		center: 'true',
+  		center: true,
   		padding: '2rem',
   		screens: {
   			'2xl': '1400px'
