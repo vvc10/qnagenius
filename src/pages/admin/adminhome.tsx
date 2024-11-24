@@ -35,25 +35,28 @@ import { Label } from "@/app/components/ui/label"
 import { RichTextEditor } from "@/app/components/RichTextEditor"
 import Image from "next/image"
 
+// Define the types
 interface Project {
-  id: string
-  title: string
-  category: string
-  image: string
-  description: string
-  duration: string
-  enrolled: string
-  instructor: string
-  requirements: string
-  blogContent: {
-    components: string
-    circuit: string
-    about_circuit: string
-    about_programming: string
-    conclusion: string
-    conclusion_images: string
-    programming: string
-  }
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  description: string;
+  duration: string;
+  enrolled: string;
+  instructor: string;
+  requirements: string;
+  blogContent: BlogContent; // Ensure blogContent is always of type BlogContent
+}
+
+interface BlogContent {
+  components: string;
+  circuit: string;
+  about_circuit: string;
+  about_programming: string;
+  conclusion: string;
+  conclusion_images: string;
+  programming: string;
 }
 
 interface Category {
