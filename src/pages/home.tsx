@@ -9,44 +9,44 @@ import Navbar from "@/app/components/Navbar"
 const Home: React.FC = () => {
   const [isDark, setIsDark] = React.useState(false)
 
-  const projects = [
-    {
-      title: "AI-Driven Innovation",
-      category: "Artificial Intelligence",
-      image: "/placeholder.svg?height=200&width=400",
-      enrolled: "50K+",
-    },
-    {
-      title: "Real-World Systems",
-      category: "Engineering",
-      image: "/placeholder.svg?height=200&width=400",
-      enrolled: "40K+",
-    },
-    {
-      title: "Design for Tomorrow",
-      category: "UI/UX Design",
-      image: "/placeholder.svg?height=200&width=400",
-      enrolled: "30K+",
-    },
-    {
-      title: "Entrepreneurship with Tech",
-      category: "Business",
-      image: "/placeholder.svg?height=200&width=400",
-      enrolled: "35K+",
-    },
-    {
-      title: "Next-Gen Marketing",
-      category: "Marketing",
-      image: "/placeholder.svg?height=200&width=400",
-      enrolled: "25K+",
-    },
-    {
-      title: "Data Science Revolution",
-      category: "Data Science",
-      image: "/placeholder.svg?height=200&width=400",
-      enrolled: "45K+",
-    },
-  ]
+  // const projects = [
+  //   {
+  //     title: "AI-Driven Innovation",
+  //     category: "Artificial Intelligence",
+  //     image: "/placeholder.svg?height=200&width=400",
+  //     enrolled: "50K+",
+  //   },
+  //   {
+  //     title: "Real-World Systems",
+  //     category: "Engineering",
+  //     image: "/placeholder.svg?height=200&width=400",
+  //     enrolled: "40K+",
+  //   },
+  //   {
+  //     title: "Design for Tomorrow",
+  //     category: "UI/UX Design",
+  //     image: "/placeholder.svg?height=200&width=400",
+  //     enrolled: "30K+",
+  //   },
+  //   {
+  //     title: "Entrepreneurship with Tech",
+  //     category: "Business",
+  //     image: "/placeholder.svg?height=200&width=400",
+  //     enrolled: "35K+",
+  //   },
+  //   {
+  //     title: "Next-Gen Marketing",
+  //     category: "Marketing",
+  //     image: "/placeholder.svg?height=200&width=400",
+  //     enrolled: "25K+",
+  //   },
+  //   {
+  //     title: "Data Science Revolution",
+  //     category: "Data Science",
+  //     image: "/placeholder.svg?height=200&width=400",
+  //     enrolled: "45K+",
+  //   },
+  // ]
 
   React.useEffect(() => {
     const isDarkMode = localStorage.getItem('darkMode') === 'true'
