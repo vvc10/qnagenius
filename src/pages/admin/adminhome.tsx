@@ -345,10 +345,10 @@ const AdminHome: React.FC = () => {
                     <p>Loading categories...</p>
                   ) : (
                     <Select
-                      id="category"
+                      data-id="category"
                       value={newProject.category}
                       onValueChange={(value) => setNewProject((prev) => ({ ...prev, category: value }))}
-                      {...({ id: "category" } as any)} 
+                      
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Project Category" />
