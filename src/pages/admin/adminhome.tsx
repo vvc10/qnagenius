@@ -395,7 +395,7 @@ const AdminHome: React.FC = () => {
                     <p>Loading categories...</p>
                   ) : (
                     <Select
-                      id="author"
+                    data-id="author"
                       value={newProject.author}
                       onValueChange={(value) => setNewProject((prev) => ({ ...prev, author: value }))}
                     >
