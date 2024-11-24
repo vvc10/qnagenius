@@ -49,7 +49,8 @@ interface Project {
   blogContent: BlogContent; // Ensure blogContent is always of type BlogContent
 }
 
-interface BlogContent {
+// Define your types
+type FirestoreBlogContent = {
   components: string;
   circuit: string;
   about_circuit: string;
@@ -57,7 +58,10 @@ interface BlogContent {
   conclusion: string;
   conclusion_images: string;
   programming: string;
-}
+};
+
+interface BlogContent extends FirestoreBlogContent { } // Extend if needed
+
 
 interface Category {
   id: string;
@@ -229,7 +233,7 @@ const AdminHome: React.FC = () => {
   }
   const handleSaveEdit = async () => {
     if (!editingProject) return;
-  
+
     setLoading(true);
     try {
       const projectRef = doc(db, "projects", editingProject.id);
@@ -243,20 +247,20 @@ const AdminHome: React.FC = () => {
         instructor: editingProject.instructor,
         requirements: editingProject.requirements,
       });
-  
+
       const blogContentRef = collection(db, "projects", editingProject.id, "blog_content");
       const blogContentSnapshot = await getDocs(blogContentRef);
       const blogContentDocRef = blogContentSnapshot.docs[0]?.ref;
-  
+
       // Using the FirestoreBlogContent type instead of any
       const blogContentToUpdate: FirestoreBlogContent = editingProject.blogContent;
-  
+
       if (blogContentDocRef) {
         await updateDoc(blogContentDocRef, blogContentToUpdate);
       } else {
         await addDoc(blogContentRef, blogContentToUpdate);
       }
-  
+
       setProjects((prev) =>
         prev.map((project) =>
           project.id === editingProject.id ? editingProject : project
@@ -271,7 +275,8 @@ const AdminHome: React.FC = () => {
       setLoading(false);
     }
   };
-  
+
+
   const handleDeleteProject = async (projectId: string) => {
     setLoading(true)
     try {
