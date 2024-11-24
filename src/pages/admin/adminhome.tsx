@@ -86,7 +86,7 @@ const AdminHome: React.FC = () => {
     description: "",
     duration: "",
     enrolled: "",
-    instructor: "",
+    author: "",
     requirements: "",
     blogContent: {
       components: "",
@@ -200,7 +200,7 @@ const AdminHome: React.FC = () => {
         description: newProject.description,
         duration: newProject.duration,
         enrolled: newProject.enrolled,
-        instructor: newProject.instructor,
+        author: newProject.author,
         requirements: newProject.requirements,
       })
 
@@ -216,7 +216,7 @@ const AdminHome: React.FC = () => {
         description: "",
         duration: "",
         enrolled: "",
-        instructor: "",
+        author: "",
         requirements: "",
         blogContent: {
           components: "",
@@ -249,7 +249,7 @@ const AdminHome: React.FC = () => {
         description: editingProject.description,
         duration: editingProject.duration,
         enrolled: editingProject.enrolled,
-        instructor: editingProject.instructor,
+        author: editingProject.author,
         requirements: editingProject.requirements,
       });
 
@@ -390,7 +390,7 @@ const AdminHome: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="instructor">Instructor</Label>
+                  <Label htmlFor="author">Author</Label>
                   {loading ? (
                     <p>Loading categories...</p>
                   ) : (
@@ -463,7 +463,7 @@ const AdminHome: React.FC = () => {
                     src={project.image} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
                   <p className="text-sm text-gray-600 mb-2">Duration: {project.duration}</p>
                   {/* <p className="text-sm text-gray-600 mb-2">Enrolled: </p> */}
-                  <p className="text-sm text-gray-600 mb-2">Instructor: {project.instructor}</p>
+                  <p className="text-sm text-gray-600 mb-2">Author: {project.author}</p>
                   <div className="mt-4">
                     <h4 className="font-semibold mb-2">Blog Content Preview:</h4>
                     <div className="text-sm text-gray-600 truncate" dangerouslySetInnerHTML={{ __html: project.blogContent.components }} />
@@ -530,11 +530,11 @@ const AdminHome: React.FC = () => {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="edit-instructor">Instructor</Label>
+                            <Label htmlFor="edit-author">Author</Label>
                             <Input
-                              id="edit-instructor"
-                              value={editingProject.instructor}
-                              onChange={(e) => setEditingProject((prev) => ({ ...prev!, instructor: e.target.value }))}
+                              id="edit-author"
+                              value={editingProject.author}
+                              onChange={(e) => setEditingProject((prev) => ({ ...prev!, author: e.target.value }))}
                             />
                           </div>
                           <div className="space-y-2">
