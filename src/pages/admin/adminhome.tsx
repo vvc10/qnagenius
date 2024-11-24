@@ -229,11 +229,11 @@ const AdminHome: React.FC = () => {
   }
 
   const handleSaveEdit = async () => {
-    if (!editingProject) return
-
-    setLoading(true)
+    if (!editingProject) return;
+  
+    setLoading(true);
     try {
-      const projectRef = doc(db, "projects", editingProject.id)
+      const projectRef = doc(db, "projects", editingProject.id);
       await updateDoc(projectRef, {
         title: editingProject.title,
         category: editingProject.category,
@@ -243,32 +243,34 @@ const AdminHome: React.FC = () => {
         enrolled: editingProject.enrolled,
         instructor: editingProject.instructor,
         requirements: editingProject.requirements,
-      })
-
-      const blogContentRef = collection(db, "projects", editingProject.id, "blog_content")
-      const blogContentSnapshot = await getDocs(blogContentRef)
-      const blogContentDocRef = blogContentSnapshot.docs[0]?.ref
-
+      });
+  
+      const blogContentRef = collection(db, "projects", editingProject.id, "blog_content");
+      const blogContentSnapshot = await getDocs(blogContentRef);
+      const blogContentDocRef = blogContentSnapshot.docs[0]?.ref;
+  
       if (blogContentDocRef) {
-        await updateDoc(blogContentDocRef, editingProject.blogContent)
+        // Cast blogContent to a more flexible type
+        await updateDoc(blogContentDocRef, editingProject.blogContent as { [key: string]: any });
       } else {
-        await addDoc(blogContentRef, editingProject.blogContent)
+        await addDoc(blogContentRef, editingProject.blogContent as { [key: string]: any });
       }
-
+  
       setProjects((prev) =>
         prev.map((project) =>
           project.id === editingProject.id ? editingProject : project
         )
-      )
-      setEditingProject(null)
-      toast.success("Project updated successfully!")
+      );
+      setEditingProject(null);
+      toast.success("Project updated successfully!");
     } catch (error) {
-      console.error("Error updating project:", error)
-      toast.error("Failed to update project.")
+      console.error("Error updating project:", error);
+      toast.error("Failed to update project.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+  
 
   const handleDeleteProject = async (projectId: string) => {
     setLoading(true)
