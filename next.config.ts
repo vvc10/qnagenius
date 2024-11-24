@@ -5,6 +5,7 @@ const nextConfig = {
       'www.simplilearn.com',
       'www.instructables.com',
       'www.pexels.com',
+      'images.pexels.com',
       'www.images.pexels.com',
     ],
     

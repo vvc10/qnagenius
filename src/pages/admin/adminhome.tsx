@@ -106,9 +106,20 @@ const AdminHome: React.FC = () => {
 
           const blogContentRef = collection(db, "projects", docSnapshot.id, "blog_content")
           const blogContentSnapshot = await getDocs(blogContentRef)
-          const blogContent = blogContentSnapshot.docs.map((doc) => doc.data())[0]
+          const blogContentData = blogContentSnapshot.docs.map((doc) => doc.data())[0]
 
-          project.blogContent = blogContent || {}
+          // Ensure blogContent matches the BlogContent type with default empty values
+          const blogContent: BlogContent = {
+            components: blogContentData?.components || '',
+            circuit: blogContentData?.circuit || '',
+            about_circuit: blogContentData?.about_circuit || '',
+            about_programming: blogContentData?.about_programming || '',
+            conclusion: blogContentData?.conclusion || '',
+            conclusion_images: blogContentData?.conclusion_images || '',
+            programming: blogContentData?.programming || '',
+          }
+
+          project.blogContent = blogContent
           projectData.push(project)
         }
 
@@ -120,6 +131,7 @@ const AdminHome: React.FC = () => {
         setLoading(false)
       }
     }
+
     const fetchCategories = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "project_categories"));
@@ -432,9 +444,9 @@ const AdminHome: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <Image
-                   width={200}
-                   height={300}
-                   src={project.image} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
+                    width={200}
+                    height={300}
+                    src={project.image} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
                   <p className="text-sm text-gray-600 mb-2">Duration: {project.duration}</p>
                   {/* <p className="text-sm text-gray-600 mb-2">Enrolled: </p> */}
                   <p className="text-sm text-gray-600 mb-2">Instructor: {project.instructor}</p>
