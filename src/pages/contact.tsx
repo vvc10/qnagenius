@@ -4,6 +4,8 @@ import { Input } from '@/app/components/ui/input'; // Assuming Input from ShadCN
 import { Textarea } from '@/app/components/ui/textarea'; // Assuming Textarea from ShadCN UI
 import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/app/db/firebase.config'; // Path to your Firebase config
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,11 +20,8 @@ const Contact = () => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // Check if dark mode preference exists in localStorage
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     setIsDark(isDarkMode);
-
-    // Apply dark class to the html element
     document.documentElement.classList.toggle('dark', isDarkMode);
   }, []);
 
@@ -30,30 +29,33 @@ const Contact = () => {
     const newDarkMode = !isDark;
     setIsDark(newDarkMode);
     localStorage.setItem('darkMode', newDarkMode.toString());
-
-    // Toggle dark class on the html element
     document.documentElement.classList.toggle('dark', newDarkMode);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    
+    const contactCollection = collection(db, 'contact');
+
     try {
-      // Simulate form submission (e.g., using fetch or axios for real-world applications)
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulating network delay
+      await addDoc(contactCollection, {
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        timestamp: new Date(),
+      });
 
       setSubmitSuccess(true);
-      setFormData({ name: '', email: '', message: '' }); // Clear form
+      setFormData({ name: '', email: '', message: '' }); // Reset form
     } catch (err) {
+      console.error('Error saving contact details to Firestore:', err);
       setSubmitError(true);
     } finally {
       setIsSubmitting(false);
@@ -67,7 +69,7 @@ const Contact = () => {
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-8">
             <h2 className="font-bold text-3xl sm:text-4xl md:text-5xl">Contact Us</h2>
-            <p className="max-w-[85%] text-muted-foreground sm:text-lg sm:leading-7">
+            <p className="max-w-[85%] my-2 mx-auto text-muted-foreground sm:text-lg sm:leading-7">
               Have a question or feedback? We&apos;d love to hear from you! Fill out the form below, and we&apos;ll get back to you as soon as possible.
             </p>
           </div>

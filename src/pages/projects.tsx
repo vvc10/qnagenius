@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from 'next/navigation'
-import { Search, ChevronRight, Eye, Clock } from 'lucide-react'
+import { Search, ChevronRight, Eye, Clock, Loader2 } from 'lucide-react'
 import { Button } from "@/app/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/app/components/ui/card"
 import { Input } from "@/app/components/ui/input"
@@ -115,6 +115,7 @@ export default function Projects() {
     })
   }
 
+
   return (
     <div className={`min-h-screen bg-gradient-to-b from-background to-secondary/10 ${isDark ? 'dark' : ''}`}>
       <Navbar isDark={isDark} toggleDarkMode={toggleDarkMode} />
@@ -139,7 +140,11 @@ export default function Projects() {
           </div>
         </motion.div>
 
-        {error ? (
+        {loading ? (
+          <div className="flex items-center justify-center h-screen">
+            <Loader2 className="w-8 h-8 animate-spin" />
+          </div>
+        ) : error ? (
           <div className="text-red-500 text-center">{error}</div>
         ) : (
           <ScrollArea className="h-[calc(100vh-300px)]">
@@ -167,12 +172,14 @@ export default function Projects() {
                     </div>
 
                     <CardContent className="p-4">
-
-                      <h3 onClick={() => handleProjectClick(project)} className="text-xl mb-3 font-semibold z-50 hover:font-[600] cursor-pointer">
-                        {project.title}</h3>
+                      <h3
+                        onClick={() => handleProjectClick(project)}
+                        className="text-xl mb-3 font-semibold z-50 hover:font-[600] cursor-pointer"
+                      >
+                        {project.title}
+                      </h3>
 
                       <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
-
                     </CardContent>
                     <CardFooter className="p-4 pt-0 flex justify-between items-center">
                       <div className="flex items-center justify-between gap-4 text-sm text-muted-foreground">
@@ -203,6 +210,7 @@ export default function Projects() {
       </main>
       <Footer />
     </div>
+
   )
 }
 

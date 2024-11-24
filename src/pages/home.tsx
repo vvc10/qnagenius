@@ -1,16 +1,13 @@
 import * as React from "react"
 import Link from "next/link"
 import { Button } from "@/app/components/ui/button"
- 
 import { cn } from "@/app/lib/utils"
 import Faqs from "@/app/components/Faqs"
 import Footer from "@/app/components/Footer"
 import Navbar from "@/app/components/Navbar"
 
- 
 const Home: React.FC = () => {
-  const [isDark, setIsDark] = React.useState('dark')
-  // const [searchTerm, setSearchTerm] = React.useState("")
+  const [isDark, setIsDark] = React.useState(false)
 
   const projects = [
     {
@@ -51,19 +48,17 @@ const Home: React.FC = () => {
     },
   ]
 
-  const filteredProjects = projects.filter((project) =>
-    project.title.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
   React.useEffect(() => {
     const isDarkMode = localStorage.getItem('darkMode') === 'true'
     setIsDark(isDarkMode)
+    document.documentElement.classList.toggle('dark', isDarkMode)
   }, [])
 
   const toggleDarkMode = () => {
     const newDarkMode = !isDark
     setIsDark(newDarkMode)
     localStorage.setItem('darkMode', newDarkMode.toString())
+    document.documentElement.classList.toggle('dark', newDarkMode)
   }
 
   return (
@@ -76,24 +71,21 @@ const Home: React.FC = () => {
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    we're created to create.
+                    we&apos;re created to create.
                   </h1>
                   <p className="max-w-[900px] text-muted-foreground md:text-xl">
                     Empowering students to create industry-defining projects with real-world applications. Build the next breakthrough today.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-
                   <Button size="lg" className="px-8">
                     Get Help
                   </Button>
-
                   <Link href="/projects">
                     <Button size="lg" variant="outline">
                       Browse Project Ideas
                     </Button>
                   </Link>
-
                 </div>
               </div>
             </div>
@@ -137,3 +129,4 @@ const Home: React.FC = () => {
 }
 
 export default Home
+

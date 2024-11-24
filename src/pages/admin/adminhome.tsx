@@ -449,7 +449,7 @@ const AdminHome: React.FC = () => {
                     <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle>Edit Project</DialogTitle>
-                        <DialogDescription>Make changes to your project here. Click save when you're done.</DialogDescription>
+                        <DialogDescription>Make changes to your project here. Click save when you are done.</DialogDescription>
                       </DialogHeader>
                       {editingProject && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AdminLogin from "@/pages/admin/adminlogin";
-import AdminHome from "@/pages/admin/addproject"; // Correct import for AdminHome
+import AdminHome from "@/pages/admin/adminhome";  
 
 const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
