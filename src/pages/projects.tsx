@@ -106,14 +106,9 @@ export default function Projects() {
   )
 
   const handleProjectClick = (project: Project) => {
-    router.push({
-      pathname: '/projectdetails',
-      query: {
-        id: project.id,
-        title: project.title,
-      }
-    })
+    router.push(`/projectdetails?id=${project.id}&title=${project.title}`);
   }
+  
 
 
   return (
