@@ -21,15 +21,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }));
 
     return res.status(200).json({ success: true, data: projects });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching projects:', error);
-    
-    // Additional logging to get more insights into the error
+
+    // Type guard to check if error is an instance of Error
     if (error instanceof Error) {
       console.error('Error Message:', error.message);
       console.error('Error Stack:', error.stack);
+      return res.status(500).json({ success: false, message: 'Error fetching projects', error: error.message });
     }
 
-    return res.status(500).json({ success: false, message: 'Error fetching projects', error: error.message });
+    // Handle case where error is not an instance of Error
+    return res.status(500).json({ success: false, message: 'Unknown error occurred' });
   }
 }
