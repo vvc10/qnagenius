@@ -11,13 +11,17 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: ReactNode;
+  theme?: { colors: { primary: string } };  // Optional theme prop
 }
 
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [theme, setTheme] = useState<string>('light');
+export const ThemeProvider = ({ children, theme }: ThemeProviderProps) => {
+  const [themeState, setThemeState] = useState<string>('light');
+
+  // You can set an initial theme value based on the passed theme prop
+  const currentTheme = theme ? theme.colors.primary : themeState;
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme: currentTheme, setTheme: setThemeState }}>
       {children}
     </ThemeContext.Provider>
   );
