@@ -19,7 +19,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isDark, toggleDarkMode }) => {
     return (
         <header className="sticky top-0 z-50 w-full px-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-16 items-center w-full">
+            <div className="container px-1 md:px-2 flex h-16 items-center w-full">
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden">
@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDark, toggleDarkMode }) => {
                     </SheetTrigger>
                     <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                         <SheetHeader>
-                            <SheetTitle>Qnagenius</SheetTitle>
+                            <SheetTitle className='text-left'>Qnagenius</SheetTitle>
                         </SheetHeader>
                         <nav className="grid gap-4 py-4">
                             {["Projects", "About", "Contact"].map((item) => (

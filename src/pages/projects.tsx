@@ -114,7 +114,7 @@ export default function Projects() {
   return (
     <div className={`min-h-screen bg-gradient-to-b from-background to-secondary/10 ${isDark ? 'dark' : ''}`}>
       <Navbar isDark={isDark} toggleDarkMode={toggleDarkMode} />
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -142,7 +142,7 @@ export default function Projects() {
         ) : error ? (
           <div className="text-red-500 text-center">{error}</div>
         ) : (
-          <ScrollArea className="h-[calc(100vh-300px)]">
+          <ScrollArea className="h-full">
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 px-4">
               {filteredProjects.map((project, index) => (
                 <motion.div

@@ -4,9 +4,9 @@ import React, { useState, useEffect } from "react"
 import { useSearchParams } from 'next/navigation'
 import Link from "next/link"
 import { motion } from "framer-motion"
-import {  Clock, Users, Share, ChevronRight } from 'lucide-react'
+import { Clock, Users, Share, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react'
 import { Button } from "@/app/components/ui/button"
- import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar"
 import { Badge } from "@/app/components/ui/badge"
@@ -56,11 +56,13 @@ export default function ProjectDetails() {
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeSection, setActiveSection] = useState("overview")
+  const [isOpen, setIsOpen] = useState(false);
+
 
   const searchParams = useSearchParams()
-  const projectId = searchParams ? searchParams.get('id') : null  
+  const projectId = searchParams ? searchParams.get('id') : null
 
-  
+
   useEffect(() => {
     const isDarkMode = localStorage.getItem("darkMode") === "true"
     setIsDark(isDarkMode)
@@ -133,34 +135,45 @@ export default function ProjectDetails() {
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
-          <aside className="lg:w-1/4">
-            <Card className="sticky top-20">
-              <CardHeader>
-                <CardTitle>Table of Contents</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <nav className="space-y-1">
-                  {sidebarItems.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={`#${item.id}`}
-                      className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${activeSection === item.id
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
-                        }`}
-                      onClick={() => setActiveSection(item.id)}
-                    >
-                      {item.label}
-                      {activeSection === item.id && (
-                        <ChevronRight className="ml-auto h-4 w-4" />
-                      )}
-                    </Link>
-                  ))}
-                </nav>
-              </CardContent>
-            </Card>
-          </aside>
+          <aside className="lg:w-1/4 fixed md:relative bottom-2 md:bottom-0 z-50 w-[90%] md:w-full mx-auto">
+            {/* Toggle button for mobile view */}
+            <div
+              className="lg:hidden flex justify-between items-center px-6 py-2 border-2 md:border-0 bg-secondary/50 backdrop-blur-md text-secondary-foreground rounded-[5px] cursor-pointer"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <span>Table of Contents</span>
+              {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+            </div>
 
+            {/* Sidebar content */}
+            {(isOpen || window.innerWidth >= 1024) && ( // Show dropdown on mobile or full sidebar on larger screens
+              <Card className={`transition-all duration-300 ${isOpen ? "block" : "hidden"} lg:block`}>
+                <CardHeader className="hidden lg:block">
+                  <CardTitle>Table of Contents</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <nav className="space-y-1 py-2">
+                    {sidebarItems.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={`#${item.id}`}
+                        className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${activeSection === item.id
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-muted"
+                          }`}
+                        onClick={() => setActiveSection(item.id)}
+                      >
+                        {item.label}
+                        {activeSection === item.id && (
+                          <ChevronRight className="ml-auto h-4 w-4" />
+                        )}
+                      </Link>
+                    ))}
+                  </nav>
+                </CardContent>
+              </Card>
+            )}
+          </aside>
           {/* Main content */}
           <div className="lg:w-3/4">
             <motion.div
@@ -199,10 +212,10 @@ export default function ProjectDetails() {
                   </div>
                 </div>
                 <div className="mx-2">
-                <Button variant="secondary">
-                  <Share/></Button>
+                  <Button variant="secondary">
+                    <Share /></Button>
                 </div>
-                 
+
               </div>
 
 
@@ -258,7 +271,7 @@ export default function ProjectDetails() {
                   <section id="programming" className="mb-8">
                     <h2 className="text-3xl font-bold mb-4">Programming</h2>
 
-                    
+
                     <Tabs defaultValue="code" className="mb-4">
                       <TabsList>
                         {/* Tab triggers */}
@@ -268,15 +281,15 @@ export default function ProjectDetails() {
 
                       {/* Tab content for Code */}
                       <TabsContent value="code">
-  <div className={`${isDark?"bg-[#1e293b]":"bg-gray-200"} px-2 py-2 rounded-[5px]`}>
-    <pre
-      className="whitespace-pre-wrap overflow-x-auto max-w-full"
-      dangerouslySetInnerHTML={{
-        __html: `<code>${project.blogContent.programming}</code>`,
-      }}
-    />
-  </div>
-</TabsContent>
+                        <div className={`${isDark ? "bg-[#1e293b]" : "bg-gray-200"} px-2 py-2 rounded-[5px]`}>
+                          <pre
+                            className="whitespace-pre-wrap overflow-x-auto max-w-full"
+                            dangerouslySetInnerHTML={{
+                              __html: `<code>${project.blogContent.programming}</code>`,
+                            }}
+                          />
+                        </div>
+                      </TabsContent>
 
 
                       {/* Tab content for Explanation */}

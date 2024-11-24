@@ -77,7 +77,7 @@ const Home: React.FC = () => {
                     Empowering students to create industry-defining projects with real-world applications. Build the next breakthrough today.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <div className="flex flex-col md:flex-row gap-2 min-[400px]:flex-row">
                   <Button size="lg" className="px-8">
                     Get Help
                   </Button>
@@ -98,21 +98,21 @@ const Home: React.FC = () => {
                   Our platform provides you with the tools to build projects that make a difference. Join the next wave of innovation and show the world what you can do.
                 </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-                <div className="space-y-4">
-                  <h3 className="text-xl font-medium">- Innovative Ideas</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-12">
+                <div className="space-y-4 text-center md:text-left">
+                  <h3 className="text-xl font-medium">- 💡 Innovative Ideas</h3>
                   <p className="text-lg text-muted-foreground">
                     Transform your ideas into reality. Explore cutting-edge technologies and concepts.
                   </p>
                 </div>
-                <div className="space-y-4">
-                  <h3 className="text-xl font-medium">- Real-World Applications</h3>
+                <div className="space-y-4 text-center md:text-left">
+                  <h3 className="text-xl font-medium">- 🌐 Real-World Applications</h3>
                   <p className="text-lg text-muted-foreground">
                     Work on projects that address real-world problems and gain valuable experience.
                   </p>
                 </div>
-                <div className="space-y-4">
-                  <h3 className="text-xl font-medium">- Empower Your Career</h3>
+                <div className="space-y-4 text-center md:text-left">
+                  <h3 className="text-xl font-medium">- 🚀 Empower Your Career</h3>
                   <p className="text-lg text-muted-foreground">
                     A final year project that sets you apart. Create something employers will value.
                   </p>
