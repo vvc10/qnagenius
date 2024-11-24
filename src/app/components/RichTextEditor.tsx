@@ -1,8 +1,10 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import TextStyle from '@tiptap/extension-text-style'
+import Underline from '@tiptap/extension-underline'
 import Image from '@tiptap/extension-image'
 import { Button } from "@/app/components/ui/button"
-import { Bold, Italic, Underline, Strikethrough, Heading1, Heading2, Heading3, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, ImageIcon } from 'lucide-react'
+import { Bold, Italic, Underline as UnderlineIcon, Strikethrough, Heading1, Heading2, Heading3, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, ImageIcon } from 'lucide-react'
 
 interface RichTextEditorProps {
   content: string
@@ -13,6 +15,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      TextStyle,
+      Underline,
       Image
     ],
     content,
@@ -36,7 +40,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
     .ProseMirror p {
       margin-bottom: 1em;
     }
- .ProseMirror li {
+    .ProseMirror li {
       margin-bottom: 1em;
       font-size: 1em;
       line-height: 1.5;
@@ -105,7 +109,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={editor.isActive('underline') ? 'bg-muted' : ''}
         >
-          <Underline className="h-4 w-4" />
+          <UnderlineIcon className="h-4 w-4" />
         </Button>
         <Button
           size="icon"
@@ -191,4 +195,3 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
     </div>
   )
 }
-
