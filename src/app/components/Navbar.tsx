@@ -1,18 +1,22 @@
-import React from 'react'
-import { Button } from "@/app/components/ui/button"
+import React from 'react';
+import { Button } from "@/app/components/ui/button";
 import {
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/app/components/ui/sheet"
-import {  Menu, Moon, Sun } from 'lucide-react'
-import Link from 'next/link'
+} from "@/app/components/ui/sheet";
+import { Menu, Moon, Sun } from 'lucide-react';
+import Link from 'next/link';
 
-const Navbar = ({ isDark, toggleDarkMode }) => {
+// Define props interface
+interface NavbarProps {
+    isDark: boolean;
+    toggleDarkMode: () => void;
+}
 
-
+const Navbar: React.FC<NavbarProps> = ({ isDark, toggleDarkMode }) => {
     return (
         <header className="sticky top-0 z-50 w-full px-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-16 items-center w-full">
@@ -70,7 +74,7 @@ const Navbar = ({ isDark, toggleDarkMode }) => {
                 </div>
             </div>
         </header>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;
