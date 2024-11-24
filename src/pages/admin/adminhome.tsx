@@ -46,7 +46,7 @@ interface Project {
   enrolled: string;
   instructor: string;
   requirements: string;
-  blogContent: BlogContent; // Ensure blogContent is always of type BlogContent
+  blogContent: FirestoreBlogContent; // Ensure blogContent is always of type BlogContent
 }
 
 // Define your types
@@ -60,7 +60,8 @@ type FirestoreBlogContent = {
   programming: string;
 };
 
-interface BlogContent extends FirestoreBlogContent { } // Extend if needed
+ // eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface BlogContent extends FirestoreBlogContent {}
 
 
 interface Category {
