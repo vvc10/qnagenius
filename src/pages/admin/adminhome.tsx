@@ -44,7 +44,7 @@ interface Project {
   description: string;
   duration: string;
   enrolled: string;
-  instructor: string;
+  author: string;
   requirements: string;
   blogContent: FirestoreBlogContent; // Ensure blogContent is always of type BlogContent
 }
@@ -395,21 +395,22 @@ const AdminHome: React.FC = () => {
                     <p>Loading categories...</p>
                   ) : (
                     <Select
-                    data-id="author"
-                      value={newProject.author}
-                      onValueChange={(value) => setNewProject((prev) => ({ ...prev, author: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Project author" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {author.map((author) => (
-                          <SelectItem key={author.id} value={author.id}>
-                            {author.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+  data-id="author"
+  value={newProject.author} // Binds to the added `author` field in the `Project` type
+  onValueChange={(value) => setNewProject((prev) => ({ ...prev, author: value }))} // Updates the `author` field
+>
+  <SelectTrigger>
+    <SelectValue placeholder="Select Project author" />
+  </SelectTrigger>
+  <SelectContent>
+    {author.map((author) => (
+      <SelectItem key={author.id} value={author.id}>
+        {author.name}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
                   )}
                 </div>
                 <div className="space-y-2">
