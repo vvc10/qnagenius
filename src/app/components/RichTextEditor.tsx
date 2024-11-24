@@ -1,14 +1,15 @@
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import TextStyle from '@tiptap/extension-text-style'
-import Underline from '@tiptap/extension-underline'
-import Image from '@tiptap/extension-image'
-import { Button } from "@/app/components/ui/button"
-import { Bold, Italic, Underline as UnderlineIcon, Strikethrough, Heading1, Heading2, Heading3, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, ImageIcon } from 'lucide-react'
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import TextStyle from '@tiptap/extension-text-style';
+import Underline from '@tiptap/extension-underline';
+import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
+import { Button } from "@/app/components/ui/button";
+import { Bold, Italic, Underline as UnderlineIcon, Strikethrough, Heading1, Heading2, Heading3, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, ImageIcon } from 'lucide-react';
 
 interface RichTextEditorProps {
-  content: string
-  onChange: (content: string) => void
+  content: string;
+  onChange: (content: string) => void;
 }
 
 export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
@@ -17,24 +18,27 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
       StarterKit,
       TextStyle,
       Underline,
-      Image
+      Image,
+      TextAlign.configure({
+        types: ['paragraph', 'heading'], // Specify the nodes you want text alignment to apply to
+      }),
     ],
     content,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML())
+      onChange(editor.getHTML());
     },
-  })
+  });
 
   if (!editor) {
-    return null
+    return null;
   }
 
   const addImage = () => {
-    const url = window.prompt('Enter the URL of the image:')
+    const url = window.prompt('Enter the URL of the image:');
     if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
+      editor.chain().focus().setImage({ src: url }).run();
     }
-  }
+  };
 
   const editorStyles = `
     .ProseMirror p {
@@ -57,7 +61,6 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
     .ProseMirror ol {
       list-style-type: decimal;
     }
-  
     .ProseMirror h1 {
       font-size: 1.5em;
       font-weight: bold;
@@ -73,10 +76,6 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
       font-weight: bold;
       margin-bottom: 0.5em;
     }
-    .ProseMirror ul, .ProseMirror ol {
-      padding-left: 1.5em;
-      margin-bottom: 1em;
-    }
     .ProseMirror img {
       max-width: 100%;
       height: auto;
@@ -87,6 +86,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
     <div className="border rounded-md p-2">
       <style>{editorStyles}</style>
       <div className="flex flex-wrap gap-2 mb-2 border-b pb-2">
+        {/* Bold Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -95,6 +95,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <Bold className="h-4 w-4" />
         </Button>
+
+        {/* Italic Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -103,6 +105,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <Italic className="h-4 w-4" />
         </Button>
+
+        {/* Underline Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -111,6 +115,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <UnderlineIcon className="h-4 w-4" />
         </Button>
+
+        {/* Strikethrough Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -119,6 +125,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <Strikethrough className="h-4 w-4" />
         </Button>
+
+        {/* Heading 1 Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -127,6 +135,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <Heading1 className="h-4 w-4" />
         </Button>
+
+        {/* Heading 2 Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -135,6 +145,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <Heading2 className="h-4 w-4" />
         </Button>
+
+        {/* Heading 3 Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -143,6 +155,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <Heading3 className="h-4 w-4" />
         </Button>
+
+        {/* Bullet List Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -151,6 +165,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <List className="h-4 w-4" />
         </Button>
+
+        {/* Ordered List Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -159,6 +175,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
+
+        {/* Align Left Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -167,6 +185,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <AlignLeft className="h-4 w-4" />
         </Button>
+
+        {/* Align Center Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -175,6 +195,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <AlignCenter className="h-4 w-4" />
         </Button>
+
+        {/* Align Right Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -183,6 +205,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <AlignRight className="h-4 w-4" />
         </Button>
+
+        {/* Image Button */}
         <Button
           size="icon"
           variant="ghost"
@@ -191,7 +215,9 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           <ImageIcon className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* Editor Content */}
       <EditorContent editor={editor} className="min-h-[300px] max-h-[500px] overflow-y-auto prose max-w-none border p-4 rounded-md" />
     </div>
-  )
+  );
 }
