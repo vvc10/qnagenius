@@ -56,9 +56,11 @@ export default function ProjectDetails() {
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeSection, setActiveSection] = useState("overview")
-  const searchParams = useSearchParams()
-  const projectId = searchParams.get('id')
 
+  const searchParams = useSearchParams()
+  const projectId = searchParams ? searchParams.get('id') : null  
+
+  
   useEffect(() => {
     const isDarkMode = localStorage.getItem("darkMode") === "true"
     setIsDark(isDarkMode)
