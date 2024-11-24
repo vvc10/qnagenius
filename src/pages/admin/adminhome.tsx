@@ -348,6 +348,7 @@ const AdminHome: React.FC = () => {
                       id="category"
                       value={newProject.category}
                       onValueChange={(value) => setNewProject((prev) => ({ ...prev, category: value }))}
+                      {...({ id: "category" } as any)} 
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Project Category" />
