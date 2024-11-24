@@ -1,9 +1,21 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-const ThemeContext = createContext(null);
+// Define the ThemeContext type to specify the shape of the context value
+interface ThemeContextType {
+  theme: string;
+  setTheme: React.Dispatch<React.SetStateAction<string>>;
+}
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState('light');
+// Create the context with the appropriate type and default value
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
+  const [theme, setTheme] = useState<string>('light');
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
@@ -11,6 +23,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// Custom hook to access the theme context
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
