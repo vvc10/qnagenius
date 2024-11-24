@@ -61,7 +61,11 @@ type FirestoreBlogContent = {
 };
 
  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface BlogContent extends FirestoreBlogContent {}
+interface BlogContent extends FirestoreBlogContent {
+  // Placeholder to satisfy ESLint
+  _futureExtension?: never;
+  
+}
 
 
 interface Category {
