@@ -84,7 +84,7 @@ interface Author {
   name: string;
 }
 const AdminHome: React.FC = () => {
-  const [isDark, setIsDark] = React.useState(false)
+  // const [isDark, setIsDark] = React.useState(false)
 
   const [projects, setProjects] = useState<Project[]>([])
   const [newProject, setNewProject] = useState<Project>({
@@ -113,11 +113,12 @@ const AdminHome: React.FC = () => {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [author, setAuthor] = useState<Author[]>([]);
-  React.useEffect(() => {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true'
-    setIsDark(isDarkMode)
-    document.documentElement.classList.toggle('dark', isDarkMode)
-  }, [])
+  
+  // React.useEffect(() => {
+  //   const isDarkMode = localStorage.getItem('darkMode') === 'true'
+  //   setIsDark(isDarkMode)
+  //   document.documentElement.classList.toggle('dark', isDarkMode)
+  // }, [])
 
   // const toggleDarkMode = () => {
   //   const newDarkMode = !isDark
