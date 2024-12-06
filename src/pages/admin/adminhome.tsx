@@ -119,12 +119,12 @@ const AdminHome: React.FC = () => {
     document.documentElement.classList.toggle('dark', isDarkMode)
   }, [])
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDark
-    setIsDark(newDarkMode)
-    localStorage.setItem('darkMode', newDarkMode.toString())
-    document.documentElement.classList.toggle('dark', newDarkMode)
-  }
+  // const toggleDarkMode = () => {
+  //   const newDarkMode = !isDark
+  //   setIsDark(newDarkMode)
+  //   localStorage.setItem('darkMode', newDarkMode.toString())
+  //   document.documentElement.classList.toggle('dark', newDarkMode)
+  // }
   useEffect(() => {
     const fetchProjects = async () => {
       try {
