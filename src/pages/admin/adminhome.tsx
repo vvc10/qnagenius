@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { db } from "@/app/db/firebase.config"
 import { motion } from "framer-motion"
-import { Clock, Users, Share, ChevronRight, ChevronUp, ChevronDown, DownloadCloud } from 'lucide-react'
+import { Clock, Users } from 'lucide-react'
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"

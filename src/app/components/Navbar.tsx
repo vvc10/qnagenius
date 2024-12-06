@@ -7,7 +7,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/app/components/ui/sheet";
-import { Menu, Moon, Sun } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
 
 // Define props interface

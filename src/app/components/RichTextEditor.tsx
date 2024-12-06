@@ -10,8 +10,7 @@ import { Bold, Italic, UnderlineIcon, Code2, Strikethrough, Heading1, Heading2, 
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-tomorrow.css'; // Optional: Prism theme CSS
 import { CodeBlock } from '@tiptap/extension-code-block';
-import { useEffect } from 'react';
-
+ 
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;

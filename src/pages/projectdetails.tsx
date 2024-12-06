@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 import { useSearchParams } from 'next/navigation'
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Clock, Users, Share, ChevronRight, ChevronUp, ChevronDown, DownloadCloud } from 'lucide-react'
+import { Clock, Users, Share, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react'
 import { Button } from "@/app/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
