@@ -32,16 +32,15 @@ const Contact = () => {
     document.documentElement.classList.toggle('dark', newDarkMode);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    
     const contactCollection = collection(db, 'contact');
 
     try {
