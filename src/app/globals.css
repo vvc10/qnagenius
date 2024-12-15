@@ -1,0 +1,220 @@
+/* globals.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-glow {
+    /* text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); */
+  }
+}
+
+@layer base {
+  /* Light Mode Variables */
+  :root {
+    --font-sans: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Color Scheme */
+    --background: #f0f4f8;
+    --foreground: #1a202c;
+
+    --muted: #e2e8f0;
+    --muted-foreground: #4a5568;
+
+    --popover: #ffffff;
+    --popover-foreground: #2d3748;
+
+    --card: #ffffff;
+    --card-foreground: #2d3748;
+
+    --border: #cbd5e0;
+    --input: #edf2f7;
+
+    --primary: #1a2234;
+    --primary-foreground: #ffffff;
+
+    --secondary: #718096;
+    --secondary-foreground: #ffffff;
+
+    /* --accent: #ed8936; */
+    --accent-foreground: #ffffff;
+
+    --destructive: #e53e3e;
+    --destructive-foreground: #ffffff;
+
+    --ring: #3182ce;
+
+    --radius: 0.5rem;
+
+    --chart-1: 201 79% 46%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 43 96% 56%;
+    --chart-4: 338 78% 48%;
+    --chart-5: 269 80% 40%;
+  }
+
+  /* Dark Mode Variables */
+  .dark {
+    --background: #0f1629;
+    --foreground: #e2e8f0;
+    
+    --muted: #1e2a4a;
+    --muted-foreground: #a0aec0;
+
+    --popover: #1a2234;
+    --popover-foreground: #e2e8f0;
+
+    --card: #1a2234;
+    --card-foreground: #e2e8f0;
+
+    --border: #2d3748;
+    --input: #2d3748;
+
+    --primary: white;
+    --primary-foreground: #1a2234;
+
+    --secondary: #4a5568;
+    --secondary-foreground: #e2e8f0;
+    
+    /* --accent: #fbd38d; */
+    --accent-foreground: #1a2234;
+
+    --destructive: #fc8181;
+    --destructive-foreground: #1a2234;
+
+    --ring: #81e6d9;
+
+    --radius: 0.5rem;
+
+    --chart-1: 183 74% 56%;
+    --chart-2: 159 66% 49%;
+    --chart-3: 43 96% 56%;
+    --chart-4: 326 78% 76%;
+    --chart-5: 271 91% 65%;
+  }
+}
+
+/* Body and General Styles */
+body {
+  @apply bg-background text-foreground font-sans transition-colors duration-300;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+pre {
+  font-family: var(--font-mono);
+  @apply bg-muted text-muted-foreground p-4 rounded-lg overflow-x-auto max-w-full whitespace-pre-wrap;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  @apply font-bold text-foreground;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+ 
+  @apply text-glow;
+}
+
+code {
+  font-family: var(--font-mono);
+  @apply bg-muted text-accent px-1 py-0.5 rounded;
+}
+
+/* Button Styles */
+button {
+  @apply px-4 py-2 rounded-md font-sans font-medium cursor-pointer transition-all duration-300 ease-in-out;
+}
+
+button.primary {
+  @apply bg-primary text-primary-foreground border border-primary hover:bg-primary-foreground hover:text-primary hover:scale-105;
+}
+
+button.secondary {
+  @apply bg-secondary text-secondary-foreground border border-secondary hover:bg-secondary-foreground hover:text-secondary hover:scale-105;
+}
+
+button.destructive {
+  @apply bg-destructive text-destructive-foreground border border-destructive hover:bg-destructive-foreground hover:text-destructive hover:scale-105;
+}
+
+.dark button {
+  @apply shadow-lg hover:shadow-xl;
+}
+
+/* Input Styles */
+input, textarea {
+  @apply p-3 rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300;
+}
+
+.dark input,
+.dark textarea {
+  @apply bg-opacity-50 backdrop-blur-sm;
+}
+
+/* Link Styles */
+a {
+  @apply text-primary hover:text-primary-foreground underline-offset-4 transition-colors duration-200;
+}
+
+a:hover {
+  /* @apply underline; */
+}
+
+.dark a {
+  @apply text-glow;
+}
+
+/* Custom Scrollbar for Webkit browsers */
+.dark ::-webkit-scrollbar {
+  width: 12px;
+}
+ 
+.dark ::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 20px;
+  border: 3px solid var(--muted);
+}
+
+/* Custom selection color */
+.dark ::selection {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.prose ul, .prose ol {
+  list-style-type: disc;
+  list-style-position: outside;
+  padding-left: 1.5em;
+  margin-left: 0.5em;
+}
+.prose ol {
+  list-style-type: decimal;
+}
+.prose li {
+  margin-bottom: 0.5em;
+  padding-left: 0.5em;
+}
+.prose li::marker {
+  color: currentColor;
+}
+.prose p {
+  margin-bottom: 1em;
+}
