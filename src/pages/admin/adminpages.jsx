@@ -97,7 +97,7 @@ const AdminPages = () => {
     };
     
     return (
-        <>
+        <Tabs>
             <TabsList className="float-end">
                 <TabsTrigger value="contact">Contacts</TabsTrigger>
                 <TabsTrigger value="users">Users</TabsTrigger>
@@ -302,7 +302,7 @@ const AdminPages = () => {
                 </Dialog>
             </TabsContent>
 
-        </>
+        </Tabs>
     );
 };
 
