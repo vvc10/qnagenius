@@ -3,18 +3,19 @@
 import React, { useState, useEffect } from "react"
 import { db } from "@/app/db/firebase.config"
 import { motion } from "framer-motion"
-import { Clock, Users } from 'lucide-react'
+import { Clock, Users, Loader2, Trash2 } from 'lucide-react'
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { Loader2, Trash2 } from 'lucide-react'
 import { Badge } from "@/app/components/ui/badge"
 import { Separator } from "@/app/components/ui/separator"
 import { ScrollArea } from "@/app/components/ui/scroll-area"
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar"
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'
 import Link from "next/link"
+import Image from "next/image"
+import RichTextEditor from '@/app/components/RichTextEditor'
 
 import {
   Dialog,
@@ -24,7 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/app/components/ui/select';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/app/components/ui/select'
 
 import {
   AlertDialog,
@@ -40,8 +41,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/components/ui/card"
 import { Label } from "@/app/components/ui/label"
-import { RichTextEditor } from "@/app/components/RichTextEditor"
-import Image from "next/image"
 
 const AdminHome = () => {
   const [projects, setProjects] = useState([])
@@ -68,9 +67,8 @@ const AdminHome = () => {
   })
   const [editingProject, setEditingProject] = useState(null)
   const [loading, setLoading] = useState(true)
-
-  const [categories, setCategories] = useState([]);
-  const [author, setAuthor] = useState([]);
+  const [categories, setCategories] = useState([])
+  const [author, setAuthor] = useState([])
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -111,50 +109,35 @@ const AdminHome = () => {
 
     const fetchCategories = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "project_categories"));
-        const categoryData = [];
-
-        querySnapshot.docs.forEach((doc) => {
-          const data = doc.data();
-          categoryData.push({
-            id: doc.id,
-            category: data.category || "Unnamed Category",
-          });
-        });
-
-        setCategories(categoryData);
+        const querySnapshot = await getDocs(collection(db, "project_categories"))
+        const categoryData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          category: doc.data().category || "Unnamed Category",
+        }))
+        setCategories(categoryData)
       } catch (error) {
-        console.error("Error fetching categories:", error);
-        toast.error("Failed to fetch categories.");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching categories:", error)
+        toast.error("Failed to fetch categories.")
       }
-    };
+    }
+
     const fetchAuthors = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "authors"));
-        const authorData = [];
-
-        querySnapshot.docs.forEach((doc) => {
-          const data = doc.data();
-          authorData.push({
-            id: doc.id,
-            author: data.author || "Unnamed author",
-          });
-        });
-
-        setAuthor(authorData);
+        const querySnapshot = await getDocs(collection(db, "authors"))
+        const authorData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          author: doc.data().author || "Unnamed author",
+        }))
+        setAuthor(authorData)
       } catch (error) {
-        console.error("Error fetching authors:", error);
-        toast.error("Failed to fetch authors.");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching authors:", error)
+        toast.error("Failed to fetch authors.")
       }
-    };
+    }
 
-    fetchCategories();
-    fetchAuthors();
-    fetchProjects();
+    fetchCategories()
+    fetchAuthors()
+    fetchProjects()
   }, [])
 
   const handleAddProject = async () => {
@@ -204,12 +187,13 @@ const AdminHome = () => {
       setLoading(false)
     }
   }
-  const handleSaveEdit = async () => {
-    if (!editingProject) return;
 
-    setLoading(true);
+  const handleSaveEdit = async () => {
+    if (!editingProject) return
+
+    setLoading(true)
     try {
-      const projectRef = doc(db, "projects", editingProject.id);
+      const projectRef = doc(db, "projects", editingProject.id)
       await updateDoc(projectRef, {
         title: editingProject.title,
         category: editingProject.category,
@@ -219,34 +203,34 @@ const AdminHome = () => {
         enrolled: editingProject.enrolled,
         author: editingProject.author,
         requirements: editingProject.requirements,
-      });
+      })
 
-      const blogContentRef = collection(db, "projects", editingProject.id, "blog_content");
-      const blogContentSnapshot = await getDocs(blogContentRef);
-      const blogContentDocRef = blogContentSnapshot.docs[0]?.ref;
+      const blogContentRef = collection(db, "projects", editingProject.id, "blog_content")
+      const blogContentSnapshot = await getDocs(blogContentRef)
+      const blogContentDocRef = blogContentSnapshot.docs[0]?.ref
 
-      const blogContentToUpdate = editingProject.blogContent;
+      const blogContentToUpdate = editingProject.blogContent
 
       if (blogContentDocRef) {
-        await updateDoc(blogContentDocRef, blogContentToUpdate);
+        await updateDoc(blogContentDocRef, blogContentToUpdate)
       } else {
-        await addDoc(blogContentRef, blogContentToUpdate);
+        await addDoc(blogContentRef, blogContentToUpdate)
       }
 
       setProjects((prev) =>
         prev.map((project) =>
           project.id === editingProject.id ? editingProject : project
         )
-      );
-      setEditingProject(null);
-      toast.success("Project updated successfully!");
+      )
+      setEditingProject(null)
+      toast.success("Project updated successfully!")
     } catch (error) {
-      console.error("Error updating project:", error);
-      toast.error("Failed to update project.");
+      console.error("Error updating project:", error)
+      toast.error("Failed to update project.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleDeleteProject = async (projectId) => {
     setLoading(true)
@@ -268,6 +252,20 @@ const AdminHome = () => {
     }
   }
 
+  const handleContentChange = (fieldName, newContent, isEditing = false) => {
+    if (isEditing) {
+      setEditingProject((prev) => ({
+        ...prev,
+        [fieldName]: newContent,
+      }))
+    } else {
+      setNewProject((prev) => ({
+        ...prev,
+        [fieldName]: newContent,
+      }))
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -279,28 +277,6 @@ const AdminHome = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-8">Admin Panel: Manage Projects and Blog Content</h1>
-      <style jsx global>{`
-     .prose ul, .prose ol {
-    list-style-type: disc;
-    list-style-position: outside;
-    padding-left: 1.5em;
-    margin-left: 0.5em;
-  }
-  .prose ol {
-    list-style-type: decimal;
-  }
-  .prose li {
-    margin-bottom: 0.5em;
-    padding-left: 0.5em;
-  }
-  .prose li::marker {
-    color: currentColor;
-  }
-  .prose p {
-    margin-bottom: 1em;
-  }
-
-      `}</style>
       <Tabs defaultValue="add" className="mb-8">
         <TabsList>
           <TabsTrigger value="add">Add New Project</TabsTrigger>
@@ -326,25 +302,21 @@ const AdminHome = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
-                  {loading ? (
-                    <p>Loading categories...</p>
-                  ) : (
-                    <Select
-                      value={newProject.category}
-                      onValueChange={(value) => setNewProject((prev) => ({ ...prev, category: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Project Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.category}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
+                  <Select
+                    value={newProject.category}
+                    onValueChange={(value) => setNewProject((prev) => ({ ...prev, category: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Project Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="image">Image URL</Label>
@@ -359,7 +331,7 @@ const AdminHome = () => {
                   <Label htmlFor="description">Description</Label>
                   <RichTextEditor
                     content={newProject.description}
-                    onChange={(content) => setNewProject((prev) => ({ ...prev, description: content }))}
+                    onChange={(content) => handleContentChange('description', content)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -373,25 +345,21 @@ const AdminHome = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="author">Author</Label>
-                  {loading ? (
-                    <p>Loading authors...</p>
-                  ) : (
-                    <Select
-                      value={newProject.author}
-                      onValueChange={(value) => setNewProject((prev) => ({ ...prev, author: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Project Author" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {author.map((author) => (
-                          <SelectItem key={author.id} value={author.id}>
-                            {author.author}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
+                  <Select
+                    value={newProject.author}
+                    onValueChange={(value) => setNewProject((prev) => ({ ...prev, author: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Project Author" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {author.map((author) => (
+                        <SelectItem key={author.id} value={author.id}>
+                          {author.author}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="requirements">Requirements</Label>
@@ -411,12 +379,7 @@ const AdminHome = () => {
                       <Label htmlFor={key}>{key.replace('_', ' ').charAt(0).toUpperCase() + key.slice(1)}</Label>
                       <RichTextEditor
                         content={value}
-                        onChange={(content) =>
-                          setNewProject((prev) => ({
-                            ...prev,
-                            blogContent: { ...prev.blogContent, [key]: content },
-                          }))
-                        }
+                        onChange={(content) => handleContentChange(`blogContent.${key}`, content)}
                       />
                     </div>
                   ))}
@@ -442,7 +405,10 @@ const AdminHome = () => {
                   <Image
                     width={200}
                     height={300}
-                    src={project.image} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
+                    src={project.image} 
+                    alt={project.title} 
+                    className="w-full h-48 object-cover rounded-md mb-4" 
+                  />
                   <p className="text-sm text-gray-600 mb-2">Duration: {project.duration}</p>
                   <p className="text-sm text-gray-600 mb-2">Author: {author.find(a => a.id === project.author)?.author || "Unknown Author"}</p>
                   <div className="mt-4">
@@ -473,25 +439,21 @@ const AdminHome = () => {
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="edit-category">Category</Label>
-                            {loading ? (
-                              <p>Loading categories...</p>
-                            ) : (
-                              <Select
-                                value={editingProject.category}
-                                onValueChange={(value) => setEditingProject((prev) => ({ ...prev, category: value }))}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select Project Category" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {categories.map((category) => (
-                                    <SelectItem key={category.id} value={category.id}>
-                                      {category.category}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            )}
+                            <Select
+                              value={editingProject.category}
+                              onValueChange={(value) => setEditingProject((prev) => ({ ...prev, category: value }))}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Project Category" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories.map((category) => (
+                                  <SelectItem key={category.id} value={category.id}>
+                                    {category.category}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="edit-image">Image URL</Label>
@@ -505,7 +467,7 @@ const AdminHome = () => {
                             <Label htmlFor="edit-description">Description</Label>
                             <RichTextEditor
                               content={editingProject.description}
-                              onChange={(content) => setEditingProject((prev) => ({ ...prev, description: content }))}
+                              onChange={(content) => handleContentChange('description', content, true)}
                             />
                           </div>
                           <div className="space-y-2">
@@ -526,25 +488,21 @@ const AdminHome = () => {
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="edit-author">Author</Label>
-                            {loading ? (
-                              <p>Loading authors...</p>
-                            ) : (
-                              <Select
-                                value={editingProject.author}
-                                onValueChange={(value) => setEditingProject((prev) => ({ ...prev, author: value }))}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select Project Author" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {author.map((author) => (
-                                    <SelectItem key={author.id} value={author.id}>
-                                      {author.author}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            )}
+                            <Select
+                              value={editingProject.author}
+                              onValueChange={(value) => setEditingProject((prev) => ({ ...prev, author: value }))}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Project Author" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {author.map((author) => (
+                                  <SelectItem key={author.id} value={author.id}>
+                                    {author.author}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="edit-requirements">Requirements</Label>
@@ -559,12 +517,7 @@ const AdminHome = () => {
                               <Label htmlFor={`edit-${key}`}>{key.replace('_', ' ').charAt(0).toUpperCase() + key.slice(1)}</Label>
                               <RichTextEditor
                                 content={value}
-                                onChange={(content) =>
-                                  setEditingProject((prev) => ({
-                                    ...prev,
-                                    blogContent: { ...prev.blogContent, [key]: content },
-                                  }))
-                                }
+                                onChange={(content) => handleContentChange(`blogContent.${key}`, content, true)}
                               />
                             </div>
                           ))}
@@ -738,6 +691,27 @@ const AdminHome = () => {
           </Card>
         </TabsContent>
       </Tabs>
+      <style jsx global>{`
+        .prose ul, .prose ol {
+          list-style-type: disc;
+          list-style-position: outside;
+          padding-left: 1.5em;
+          margin-left: 0.5em;
+        }
+        .prose ol {
+          list-style-type: decimal;
+        }
+        .prose li {
+          margin-bottom: 0.5em;
+          padding-left: 0.5em;
+        }
+        .prose li::marker {
+          color: currentColor;
+        }
+        .prose p {
+          margin-bottom: 1em;
+        }
+      `}</style>
     </div>
   )
 }

@@ -218,3 +218,73 @@ a:hover {
 .prose p {
   margin-bottom: 1em;
 }
+
+
+
+/* Rich Text Editor Styles */
+
+.ProseMirror {
+  min-height: 300px;
+  padding: 1rem;
+}
+.ProseMirror p {
+  margin-bottom: 1em;
+}
+.ProseMirror li {
+  margin-bottom: 0.5em;
+  font-size: 1em;
+  line-height: 1.5;
+  padding-left: 0.5em;
+}
+.ProseMirror ul, .ProseMirror ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+.ProseMirror ul {
+  list-style-type: disc;
+}
+.ProseMirror ol {
+  list-style-type: decimal;
+}
+.ProseMirror h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+.ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+.ProseMirror h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+}
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  margin: 1em 0;
+}
+.ProseMirror pre {
+  background-color: rgb(30, 30, 30);
+  border-radius: 0.5em;
+  color: #fff;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75em 1em;
+  margin: 1em 0;
+}
+.ProseMirror pre code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.9em;
+}
+.ProseMirror code {
+  background-color: rgba(97, 97, 97, 0.1);
+  color: #616161;
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  font-size: 0.9em;
+  font-family: 'JetBrainsMono', monospace;
+}
