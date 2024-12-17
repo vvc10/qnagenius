@@ -41,6 +41,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/components/ui/card"
 import { Label } from "@/app/components/ui/label"
+import AdminPages from "@/pages/admin/adminpages"
 
 const AdminHome = () => {
   const [projects, setProjects] = useState([])
@@ -283,6 +284,7 @@ const AdminHome = () => {
           <TabsTrigger value="list">Project List</TabsTrigger>
           <TabsTrigger value="viewproject">View Project</TabsTrigger>
         </TabsList>
+        <AdminPages />
         <TabsContent value="add">
           <Card>
             <CardHeader>
@@ -405,9 +407,9 @@ const AdminHome = () => {
                   <Image
                     width={200}
                     height={300}
-                    src={project.image} 
-                    alt={project.title} 
-                    className="w-full h-48 object-cover rounded-md mb-4" 
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-48 object-cover rounded-md mb-4"
                   />
                   <p className="text-sm text-gray-600 mb-2">Duration: {project.duration}</p>
                   <p className="text-sm text-gray-600 mb-2">Author: {author.find(a => a.id === project.author)?.author || "Unknown Author"}</p>
@@ -691,27 +693,6 @@ const AdminHome = () => {
           </Card>
         </TabsContent>
       </Tabs>
-      <style jsx global>{`
-        .prose ul, .prose ol {
-          list-style-type: disc;
-          list-style-position: outside;
-          padding-left: 1.5em;
-          margin-left: 0.5em;
-        }
-        .prose ol {
-          list-style-type: decimal;
-        }
-        .prose li {
-          margin-bottom: 0.5em;
-          padding-left: 0.5em;
-        }
-        .prose li::marker {
-          color: currentColor;
-        }
-        .prose p {
-          margin-bottom: 1em;
-        }
-      `}</style>
     </div>
   )
 }
