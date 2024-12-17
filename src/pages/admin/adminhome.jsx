@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { db } from "@/app/db/firebase.config"
 import { motion } from "framer-motion"
-import { Clock, Users, Loader2, Trash2 } from 'lucide-react'
+import { Clock, Users, Loader2, Trash2, Delete } from 'lucide-react'
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
@@ -16,7 +16,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import Link from "next/link"
 import Image from "next/image"
 import RichTextEditor from '@/app/components/RichTextEditor'
-
 import {
   Dialog,
   DialogContent,
@@ -41,7 +40,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/components/ui/card"
 import { Label } from "@/app/components/ui/label"
-import AdminPages from "@/pages/admin/adminpages"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/components/ui/table';
+
 
 const AdminHome = () => {
   const [projects, setProjects] = useState([])
@@ -70,75 +70,148 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true)
   const [categories, setCategories] = useState([])
   const [author, setAuthor] = useState([])
+  const [contacts, setContacts] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [selectedContact, setSelectedContact] = useState(null); // For the dialog
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [assistanceForms, setAssistanceForms] = useState([]);
+  const [isAssistanceDialogOpen, setAssitanceIsDialogOpen] = useState(false);
+  const [selectedAssistanceForm, setSelectedAssistanceForm] = useState(null);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "projects"))
-        const projectData = []
 
-        for (const docSnapshot of querySnapshot.docs) {
-          const project = { id: docSnapshot.id, ...docSnapshot.data() }
+  // Fetch data from Firestore
+  const fetchContacts = async () => {
+    try {
+      const contactRef = collection(db, 'contact');
+      const snapshot = await getDocs(contactRef);
+      const contactsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setContacts(contactsData);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching contacts:', err);
+      toast.error('Failed to fetch contacts.');
+      setLoading(false);
+    }
+  };
 
-          const blogContentRef = collection(db, "projects", docSnapshot.id, "blog_content")
-          const blogContentSnapshot = await getDocs(blogContentRef)
-          const blogContentData = blogContentSnapshot.docs.map((doc) => doc.data())[0]
+  const fetchUsers = async () => {
+    try {
+      const userRef = collection(db, 'users');
+      const snapshot = await getDocs(userRef);
+      const usersData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setUsers(usersData);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching Users:', err);
+      toast.error('Failed to fetch Users.');
+      setLoading(false);
+    }
+  };
 
-          const blogContent = {
-            components: blogContentData?.components || '',
-            circuit: blogContentData?.circuit || '',
-            about_circuit: blogContentData?.about_circuit || '',
-            about_programming: blogContentData?.about_programming || '',
-            conclusion: blogContentData?.conclusion || '',
-            conclusion_images: blogContentData?.conclusion_images || '',
-            programming: blogContentData?.programming || '',
-            resources: blogContentData?.resources || '',
-          }
+  const fetchAssistanceForms = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, 'userassistance'));
+      setAssistanceForms(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    } catch (err) {
+      toast.error('Failed to fetch assistance forms.');
+    }
+  };
+  const fetchProjects = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "projects"))
+      const projectData = []
 
-          project.blogContent = blogContent
-          projectData.push(project)
+      for (const docSnapshot of querySnapshot.docs) {
+        const project = { id: docSnapshot.id, ...docSnapshot.data() }
+
+        const blogContentRef = collection(db, "projects", docSnapshot.id, "blog_content")
+        const blogContentSnapshot = await getDocs(blogContentRef)
+        const blogContentData = blogContentSnapshot.docs.map((doc) => doc.data())[0]
+
+        const blogContent = {
+          components: blogContentData?.components || '',
+          circuit: blogContentData?.circuit || '',
+          about_circuit: blogContentData?.about_circuit || '',
+          about_programming: blogContentData?.about_programming || '',
+          conclusion: blogContentData?.conclusion || '',
+          conclusion_images: blogContentData?.conclusion_images || '',
+          programming: blogContentData?.programming || '',
+          resources: blogContentData?.resources || '',
         }
 
-        setProjects(projectData)
-      } catch (error) {
-        console.error("Error fetching projects:", error)
-        toast.error("Failed to fetch projects.")
-      } finally {
-        setLoading(false)
+        project.blogContent = blogContent
+        projectData.push(project)
       }
-    }
 
-    const fetchCategories = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "project_categories"))
-        const categoryData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          category: doc.data().category || "Unnamed Category",
-        }))
-        setCategories(categoryData)
-      } catch (error) {
-        console.error("Error fetching categories:", error)
-        toast.error("Failed to fetch categories.")
-      }
+      setProjects(projectData)
+    } catch (error) {
+      console.error("Error fetching projects:", error)
+      toast.error("Failed to fetch projects.")
+    } finally {
+      setLoading(false)
     }
+  }
 
-    const fetchAuthors = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "authors"))
-        const authorData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          author: doc.data().author || "Unnamed author",
-        }))
-        setAuthor(authorData)
-      } catch (error) {
-        console.error("Error fetching authors:", error)
-        toast.error("Failed to fetch authors.")
-      }
+  const fetchCategories = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "project_categories"))
+      const categoryData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        category: doc.data().category || "Unnamed Category",
+      }))
+      setCategories(categoryData)
+    } catch (error) {
+      console.error("Error fetching categories:", error)
+      toast.error("Failed to fetch categories.")
     }
+  }
+
+  const fetchAuthors = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "authors"))
+      const authorData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        author: doc.data().author || "Unnamed author",
+      }))
+      setAuthor(authorData)
+    } catch (error) {
+      console.error("Error fetching authors:", error)
+      toast.error("Failed to fetch authors.")
+    }
+  }
+  // Delete contact
+  const handleDelete = async (id) => {
+    alert("you can't delete contacts/forms for now.")
+    // try {
+
+    //     await deleteDoc(doc(db, 'contact', id));
+    //     toast.success('Contact deleted successfully.');
+    //     setContacts(contacts.filter((contact) => contact.id !== id));
+    // } catch (err) {
+    //     console.error('Error deleting contact:', err);
+    //     toast.error('Failed to delete contact.');
+    // }
+  };
+
+  // Open dialog and set the selected contact
+  const handleRowClick = (contact) => {
+    setSelectedContact(contact);
+    setIsDialogOpen(true);
+  };
+  const handleAssistanceRowClick = (form) => {
+    setSelectedAssistanceForm(form); // Use the setter function here
+    setAssitanceIsDialogOpen(true);
+  };
+
+  useEffect(() => {
+
 
     fetchCategories()
     fetchAuthors()
     fetchProjects()
+    fetchContacts();
+    fetchUsers();
+    fetchAssistanceForms();
   }, [])
 
   const handleAddProject = async () => {
@@ -284,7 +357,13 @@ const AdminHome = () => {
           <TabsTrigger value="list">Project List</TabsTrigger>
           <TabsTrigger value="viewproject">View Project</TabsTrigger>
         </TabsList>
-        <AdminPages />
+
+        <TabsList className="float-end">
+          <TabsTrigger value="contact">Contacts</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="assistantforms">Assistance Forms</TabsTrigger>
+        </TabsList>
+
         <TabsContent value="add">
           <Card>
             <CardHeader>
@@ -692,7 +771,206 @@ const AdminHome = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="contact">
+          <Card>
+            <CardHeader>
+              <CardTitle>Contacts</CardTitle>
+              <CardDescription>Forms Submitted by users</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <p>Loading...</p>
+              ) : contacts.length === 0 ? (
+                <p>No contacts found.</p>
+              ) : (
+                <Table>
+                  {/* <TableCaption>List of submitted contact forms.</TableCaption> */}
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Message</TableHead>
+                      <TableHead className="text-right">Details</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {contacts.map((contact) => (
+                      <TableRow key={contact.id}>
+                        <TableCell>{contact.name}</TableCell>
+                        <TableCell>{contact.email}</TableCell>
+                        <TableCell>{contact.message ? contact.message.slice(0, 20) : "No message"}...</TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="outline" onClick={() => handleRowClick(contact)}>
+                            View Details
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+          {/* Dialog to show contact details */}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Contact Details</DialogTitle>
+              </DialogHeader>
+              {selectedContact && (
+                <div className="space-y-4">
+                  <p>
+                    <strong>Name:</strong> {selectedContact.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {selectedContact.email}
+                  </p>
+                  <p>
+                    <strong>Message:</strong> {selectedContact.message}
+                  </p>
+                  <p>
+                    <strong>Submitted on:</strong> {new Date(selectedContact.timestamp?.toDate()).toLocaleString()}
+                  </p>
+                  <p>
+                    <Button className="bg-transparent text-red-600" onClick={handleDelete}>
+
+                      <Delete />Delete
+
+                    </Button>
+
+                  </p>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+        </TabsContent>
+        <TabsContent value="users">
+          <Card>
+            <CardHeader>
+              <CardTitle>Users</CardTitle>
+              <CardDescription>Users on QnaGenius</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <p>Loading...</p>
+              ) : users.length === 0 ? (
+                <p>No users found.</p>
+              ) : (
+                <Table>
+                  {/* <TableCaption>List of submitted contact forms.</TableCaption> */}
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Message</TableHead>
+                      <TableHead className="text-right">Details</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>{user.name}</TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell></TableCell>
+                        {/* <TableCell className="text-right">
+                                                    <Button variant="outline" onClick={() => handleRowClick(user)}>
+                                                        View Details
+                                                    </Button>
+                                                </TableCell> */}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+            <CardFooter>
+
+            </CardFooter>
+          </Card>
+        </TabsContent>
+        <TabsContent value="assistantforms">
+          <Card>
+            <CardHeader>
+              <CardTitle>Assistance Forms</CardTitle>
+              <CardDescription>Requests for Assistance</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <p>Loading...</p>
+              ) : assistanceForms.length === 0 ? (
+                <p>No assistance forms found.</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead>Submitted on</TableHead>
+                      <TableHead>Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {assistanceForms.map((form) => (
+                      <TableRow key={form.id}>
+                        <TableCell>{form.name}</TableCell>
+                        <TableCell>{form.email}</TableCell>
+                        <TableCell>{form.contact}</TableCell>
+                        <TableCell>
+                          {form.timestamp
+                            ? new Date(form.timestamp.seconds * 1000).toLocaleString()
+                            : 'No timestamp'}
+                        </TableCell>
+                        <TableCell>
+                          <Button onClick={() => handleAssistanceRowClick(form)}>
+                            View Details
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Dialog to show full form details */}
+          <Dialog open={isAssistanceDialogOpen} onOpenChange={setAssitanceIsDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Assistance Form Details</DialogTitle>
+              </DialogHeader>
+              {selectedAssistanceForm && (
+                <div className="space-y-4">
+                  <p>
+                    <strong>Name:</strong> {selectedAssistanceForm.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {selectedAssistanceForm.email}
+                  </p>
+                  <p>
+                    <strong>Contact:</strong> {selectedAssistanceForm.contact}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {selectedAssistanceForm.description}
+                  </p>
+                  <p>
+                    <strong>Submitted on:</strong> {new Date(selectedAssistanceForm.timestamp?.seconds * 1000).toLocaleString()}
+                  </p>
+                  <p>
+                    <Button className="bg-transparent text-red-600" onClick={handleDelete}>
+                      <Trash2 /> Delete
+                    </Button>
+                  </p>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+        </TabsContent>
+
       </Tabs>
+
     </div>
   )
 }
