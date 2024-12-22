@@ -37,6 +37,7 @@ export default function Projects() {
   }
 
   useEffect(() => {
+
     const fetchProjects = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "projects"))
@@ -183,7 +184,7 @@ export default function Projects() {
                         </div>
                         <div className="flex items-center">
                           <Eye className="mr-1 h-4 w-4" />
-                          1k
+                          {project.views ? project.views : 0}
                         </div>
                         <div className="flex items-center">
                           <Eye className="mr-1 h-4 w-4" />

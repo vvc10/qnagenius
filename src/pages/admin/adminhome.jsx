@@ -55,6 +55,7 @@ const adminhome = () => {
     enrolled: "",
     author: "",
     requirements: "",
+    views: "",
     blogContent: {
       components: "",
       circuit: "",
@@ -271,6 +272,7 @@ const adminhome = () => {
         enrolled: newProject.enrolled || "0",
         author: newProject.author,
         requirements: newProject.requirements,
+        views: newProject.views || "0",
       });
 
       // Then, create the blog content as a separate document in a subcollection
@@ -309,6 +311,7 @@ const adminhome = () => {
         enrolled: "",
         author: "",
         requirements: "",
+        views: "",
         blogContent: {
           components: "",
           circuit: "",
@@ -345,6 +348,7 @@ const adminhome = () => {
         enrolled: editingProject.enrolled,
         author: editingProject.author,
         requirements: editingProject.requirements,
+        views: editingProject.views,
       })
 
       const blogContentRef = collection(db, "projects", editingProject.id, "blog_content")
