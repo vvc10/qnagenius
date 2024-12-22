@@ -12,21 +12,21 @@ import Link from 'next/link';
 // Define Navbar component
 const Navbar = ({ isDark, toggleDarkMode }) => {
     return (
-        <header className="sticky top-0 w-full px-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 w-full px-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-[6000]">
             <div className="px-1 md:px-2 flex h-16 items-center w-full">
-                <Sheet>
+                <Sheet className="">
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden">
                             <Menu className="h-6 w-6" />
                             <span className="sr-only">Toggle Menu</span>
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+                    <SheetContent side="left" className="w-[300px] sm:w-[400px] z-[10000]">
                         <SheetHeader>
                             <h2 className='text-left'>Qnagenius</h2>
                         </SheetHeader>
                         <nav className="grid gap-4 py-4">
-                            {["Projects", "About", "Contact"].map((item) => (
+                            {["Projects", "AI" ,"About", "Contact"].map((item) => (
                                 <Link
                                     key={item}
                                     href={`/${item.toLowerCase()}`}

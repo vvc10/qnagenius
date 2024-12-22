@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import AdminLogin from "@/pages/admin/adminlogin";
 import AdminHome from "@/pages/admin/adminhome";  
@@ -21,3 +23,4 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
+

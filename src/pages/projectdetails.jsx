@@ -16,7 +16,9 @@ import Image from "next/image"
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import { db } from "@/app/db/firebase.config"
-import { doc, getDoc, collection, getDocs } from "firebase/firestore"
+import { doc, getDoc, collection, updateDoc, getDocs, increment } from "firebase/firestore"
+import { formatDistanceToNow } from "date-fns";
+
 
 const sidebarItems = [
   { id: "overview", label: "Overview" },
@@ -41,6 +43,37 @@ export default function ProjectDetails() {
     setIsDark(isDarkMode)
     document.documentElement.classList.toggle("dark", isDarkMode)
   }, [])
+
+  
+  useEffect(() => {
+    
+    const updateViews = async () => {
+      try {
+        if (!projectId) {
+          console.error("Project ID is missing");
+          return;
+        }
+
+        const projectViewRef = doc(db, "projects", projectId);
+        const projectSnap = await getDoc(projectViewRef);
+
+        if (projectSnap.exists()) {
+          await updateDoc(projectViewRef, {
+            views: increment(1),
+          });
+          console.log("Views updated successfully");
+        } else {
+          console.log("No document exists with the given ID");
+        }
+      } catch (error) {
+        console.error("Error updating views:", error);
+      }
+    };
+
+    updateViews();
+  }, [projectId]);
+
+
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -140,42 +173,53 @@ export default function ProjectDetails() {
           <aside className="lg:w-1/4 fixed md:relative bottom-2 md:bottom-0 z-50 w-[90%] md:w-full mx-auto">
             {/* Toggle button for mobile view */}
             <div
-              className="lg:hidden flex justify-between items-center px-6 py-2 border-2 md:border-0 bg-secondary/50 backdrop-blur-md text-secondary-foreground rounded-[5px] cursor-pointer"
+              className="lg:hidden flex justify-between items-center px-6 py-3 border-[1px] md:border-0 bg-secondary/50 backdrop-blur-md text-secondary-foreground rounded-[5px] cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
             >
-              <span>Table of Contents</span>
-              {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+              <span className={`${isDark ? "text-white" : "text-black"}`}>Table of Contents</span>
+
+              {isOpen ? <ChevronDown className={`w-4 h-4  ${isDark ? "text-white" : "text-black "}`} /> : <ChevronUp className={`w-4 h-4  ${isDark ? "text-white" : "text-black"}`} />}
             </div>
 
             {/* Sidebar content */}
             {(isOpen || window.innerWidth >= 1024) && (
-              <Card className={`transition-all duration-300 ${isOpen ? "block" : "hidden"} lg:block`}>
-                <CardHeader className="hidden lg:block">
-                  <CardTitle>Table of Contents</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <nav className="space-y-1 py-2">
-                    {sidebarItems.map((item) => (
-                      <Link
-                        key={item.id}
-                        href={`#${item.id}`}
-                        className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                          activeSection === item.id
+              <div classList="flex flex-col md:flex-col gap-5 lg:sticky lg:top-20">
+                <Card className={`transition-all duration-300 ${isOpen ? "block" : "hidden"} lg:block`}>
+                  <CardHeader className="hidden lg:block">
+                    <CardTitle>Table of Contents</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <nav className="space-y-1 py-2">
+                      {sidebarItems.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={`#${item.id}`}
+                          className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${activeSection === item.id
                             ? "bg-primary text-primary-foreground"
                             : "hover:bg-muted"
-                        }`}
-                        onClick={() => setActiveSection(item.id)}
-                      >
-                        {item.label}
-                        {activeSection === item.id && (
-                          <ChevronRight className="ml-auto h-4 w-4" />
-                        )}
-                      </Link>
-                    ))}
-                  </nav>
-                </CardContent>
-              </Card>
+                            }`}
+                          onClick={() => setActiveSection(item.id)}
+                        >
+                          {item.label}
+                          {activeSection === item.id && (
+                            <ChevronRight className="ml-auto h-4 w-4" />
+                          )}
+                        </Link>
+                      ))}
+                    </nav>
+                  </CardContent>
+
+                </Card>
+                {/* Ad Block */}
+                {/* <div className="bg-gray-100 text-center border-[1px] border-gray-200 py-4 px-3">
+                  <span className="text-sm font-medium text-gray-600">
+                    Ads
+                  </span>
+                </div> */}
+              </div>
+
             )}
+
           </aside>
           {/* Main content */}
           <div className="lg:w-3/4">
@@ -204,10 +248,13 @@ export default function ProjectDetails() {
                     </Badge>
                     <Badge variant="secondary" className="flex items-center gap-1">
                       <Users className="h-4 w-4" />
-                      {project.enrolled}
+
+                      {project.views || 0} Views
+
+
                     </Badge>
                     <Badge variant="secondary">{project.categoryName}</Badge>
-                    <Badge variant="secondary">Last updated {project.lastUpdated}</Badge>
+                    {/* <Badge variant="secondary">Last updated - {project.date_updated}</Badge> */}
                   </div>
                 </div>
                 <div className="mx-2">
@@ -241,7 +288,7 @@ export default function ProjectDetails() {
                 <TabsTrigger value="files">Files</TabsTrigger>
               </TabsList>
               <TabsContent value="content">
-                <ScrollArea className="h-full w-full rounded-md border p-4">
+                <Card className="h-full w-full  rounded-md border p-6">
                   <section id="overview" className="mb-8">
                     <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
                   </section>
@@ -279,7 +326,7 @@ export default function ProjectDetails() {
                         />
                       </TabsContent>
                       <TabsContent value="explanation">
-                        <div 
+                        <div
                           className="prose max-w-none"
                           dangerouslySetInnerHTML={{ __html: project.blogContent.about_programming }}
                         />
@@ -293,7 +340,7 @@ export default function ProjectDetails() {
                     <h2 className="text-3xl font-bold mb-4">Conclusion</h2>
                     <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: project.blogContent.conclusion }} />
                   </section>
-                </ScrollArea>
+                </Card>
               </TabsContent>
               <TabsContent value="overview">
                 <Card>
